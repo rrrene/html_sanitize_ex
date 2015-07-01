@@ -9,10 +9,6 @@ defmodule HtmlSanitizeEx do
     html |> Scrubber.scrub(Scrubber.BasicHTML)
   end
 
-  def markdown(html) do
-    html |> Scrubber.scrub(Scrubber.BasicHTML)
-  end
-
   def strip_tags(html) do
     html |> Scrubber.scrub(Scrubber.StripTags)
   end

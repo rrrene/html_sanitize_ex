@@ -3,12 +3,13 @@ defmodule HtmlSanitizeEx.Scrubber.StripTags do
   Strips all tags.
   """
 
-  def before_scrub(text) do
-    String.replace(text, "<![CDATA[", "")
-  end
+  require HtmlSanitizeEx.Scrubber.Meta
+  alias HtmlSanitizeEx.Scrubber.Meta
 
-  def scrub({_, _, children}), do: children
-  def scrub({:comment, children}), do: ""
-  def scrub({_, children}), do: children
-  def scrub(text), do: text
+  # Removes any CDATA tags before the traverser/scrubber runs.
+  Meta.remove_cdata_sections_before_scrub
+
+  Meta.strip_comments
+
+  Meta.strip_everything_not_covered
 end

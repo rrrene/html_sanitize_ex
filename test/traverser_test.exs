@@ -45,19 +45,19 @@ defmodule HtmlSanitizeExTraverserTest do
 
   test "should return expected tree 5" do
     input = "<<<bad html"
-    expected = [""]
-  #  assert expected == parse_to_tree(input)
+    expected = ["<<"]
+    assert expected == parse_to_tree(input)
   end
 
   test "should return expected tree 6" do
     input = "<\" <img src=\"trollface.gif\" onload=\"alert(1)\"> hi"
-    expected = [""]
-  #  assert expected == parse_to_tree(input)
+    expected = ["<\" ", " hi"]
+    assert expected == parse_to_tree(input)
   end
 
   test "should return expected tree 7" do
     input = "This has a <![CDATA[<section>]]> here."
-    expected = [""]
-  #  assert expected == parse_to_tree(input)
+    expected = "This has a <section> here."
+    assert expected == parse_to_tree(input)
   end
 end

@@ -5,8 +5,11 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
   This meant for testing purposes and as a template for your own scrubber.
   """
 
-  def before_scrub(text) do
-    text
+  @doc """
+    Can be used to preprocess the given +html+ String before it is scrubbed.
+  """
+  def before_scrub(html) do
+    html
   end
 
   @doc """
