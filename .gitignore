@@ -1,0 +1,6 @@
+/_build
+/deps
+/docs/all.json
+test.json
+erl_crash.dump
+*.ez
