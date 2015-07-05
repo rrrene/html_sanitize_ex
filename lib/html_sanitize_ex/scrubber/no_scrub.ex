@@ -24,7 +24,7 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
   @doc """
     Scrubs tokens like comments and doctypes.
   """
-  def scrub({token, children}), do: children
+  def scrub({_token, children}), do: children
 
   @doc """
     Scrubs a text node.
@@ -56,7 +56,7 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
         nil
       end
   """
-  def scrub_attribute(tag, attribute) do
+  def scrub_attribute(_tag, attribute) do
     attribute
   end
 end

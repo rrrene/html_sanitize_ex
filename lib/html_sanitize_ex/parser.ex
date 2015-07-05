@@ -31,7 +31,7 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
 
   defp ensure_list(list) do
     case list do
-      [head | tail] -> list
+      [_head | _tail] -> list
       _ -> [list]
     end
   end
