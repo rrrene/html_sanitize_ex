@@ -1,6 +1,6 @@
 # HtmlSanitizeEx
 
-html_sanitize_ex provides HTML string sanitization to prevent malicious user content from XSS attacks.
+`html_sanitize_ex` provides a fast and straightforward HTML Sanitizer written in Elixir which lets you include HTML authored by third-parties in your web application while protecting against XSS. The only dependency is `mochiweb` which is used to parse HTML.
 
 It is the first Hex package to come out of the [elixirstatus.com](http://elixirstatus.com) project, where it is used to sanitize user annoucements around the Elixir community.
 
@@ -8,7 +8,7 @@ It is the first Hex package to come out of the [elixirstatus.com](http://elixirs
 
 ## What can it do?
 
-html_sanitize_ex parses a given HTML string and, based on the used Scrubber, either completely strips it from HTML tags or sanitizes it by only allowing certain HTML elements and attributes to be present.
+`html_sanitize_ex` parses a given HTML string and, based on the used [Scrubber](https://github.com/rrrene/html_sanitize_ex/tree/master/lib/html_sanitize_ex/scrubber), either completely strips it from HTML tags or sanitizes it by only allowing certain HTML elements and attributes to be present.
 
 
 
