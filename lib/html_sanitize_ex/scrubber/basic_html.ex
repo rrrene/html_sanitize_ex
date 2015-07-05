@@ -1,8 +1,9 @@
 defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   @moduledoc """
-  Allows basic HTML tags to support user input for writing with e.g. Markdown.
+  Allows basic HTML tags to support user input for writing relatively
+  plain text with e.g. Markdown.
 
-  Does not allow any styling, HTML5 tags, video embeds etc.
+  Does not allow any mailto-links, styling, HTML5 tags, video embeds etc.
   """
 
   require HtmlSanitizeEx.Scrubber.Meta

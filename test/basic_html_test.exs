@@ -149,12 +149,12 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   end
 
   test "test_strip links with links" do
-    input = "<a href='http://www.rubyonrails.com/'><a href='http://www.rubyonrails.com/' onlclick='steal()'>0wn3d</a></a>"
-    assert "<a href=\"http://www.rubyonrails.com/\"><a href=\"http://www.rubyonrails.com/\">0wn3d</a></a>" == basic_html_sanitize(input)
+    input = "<a href='http://www.elixirstatus.com/'><a href='http://www.elixirstatus.com/' onlclick='steal()'>0wn3d</a></a>"
+    assert "<a href=\"http://www.elixirstatus.com/\"><a href=\"http://www.elixirstatus.com/\">0wn3d</a></a>" == basic_html_sanitize(input)
   end
 
   test "test_strip_links_with_linkception" do
-    assert "<a href=\"http://www.rubyonrails.com/\">Mag<a href=\"http://www.ruby-lang.org/\">ic</a></a>" == basic_html_sanitize("<a href='http://www.rubyonrails.com/'>Mag<a href='http://www.ruby-lang.org/'>ic")
+    assert "<a href=\"http://www.elixirstatus.com/\">Mag<a href=\"http://www.elixir-lang.org/\">ic</a></a>" == basic_html_sanitize("<a href='http://www.elixirstatus.com/'>Mag<a href='http://www.elixir-lang.org/'>ic")
   end
 
   test "test_strip_links_with_a_tag_in_href" do
