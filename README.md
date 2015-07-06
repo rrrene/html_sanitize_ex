@@ -1,6 +1,6 @@
 # HtmlSanitizeEx
 
-`html_sanitize_ex` provides a fast and straightforward HTML Sanitizer written in Elixir which lets you include HTML authored by third-parties in your web application while protecting against XSS. The only dependency is `mochiweb` which is used to parse HTML.
+`html_sanitize_ex` provides a fast and straightforward HTML Sanitizer written in Elixir which lets you include HTML authored by third-parties in your web application while protecting against XSS.
 
 It is the first Hex package to come out of the [elixirstatus.com](http://elixirstatus.com) project, where it is used to sanitize user annoucements around the Elixir community.
 
@@ -22,8 +22,9 @@ defp deps do
 end
 ```
 
-After adding you are done, run `mix deps.get` in your shell to fetch the new dependency.
+After adding you are done, run `mix deps.get` in your shell to fetch the new dependency.  
 
+The only dependency of `html_sanitize_ex` is `mochiweb` which is used to parse HTML.
 
 
 ## Usage
