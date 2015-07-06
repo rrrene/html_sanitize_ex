@@ -2,7 +2,7 @@
 
 `html_sanitize_ex` provides a fast and straightforward HTML Sanitizer written in Elixir which lets you include HTML authored by third-parties in your web application while protecting against XSS.
 
-It is the first Hex package to come out of the [elixirstatus.com](http://elixirstatus.com) project, where it is used to sanitize user annoucements around the Elixir community.
+It is the first Hex package to come out of the [elixirstatus.com](http://elixirstatus.com) project, where it will be used to sanitize user annoucements from the Elixir community.
 
 
 
