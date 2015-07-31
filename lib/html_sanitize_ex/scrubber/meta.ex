@@ -48,7 +48,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
     the attributes.
   """
   defmacro allow_tags_and_scrub_their_attributes(list) do
-    Enum.map(list, fn name -> allow_this_tag_and_scrub_its_attributes(name) end)
+    Enum.map(list, fn tag_name -> allow_this_tag_and_scrub_its_attributes(tag_name) end)
   end
 
   @doc """
@@ -59,9 +59,10 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
         Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
 
   """
-  defmacro allow_tag_with_these_attributes(tag, list \\ []) do
+  defmacro allow_tag_with_these_attributes(tag_name, list \\ []) do
     list
-      |> Enum.map(fn name -> allow_this_tag_with_these_attributes(tag, name) end)
+      |> Enum.map(fn attr_name -> allow_this_tag_with_this_attribute(tag_name, attr_name) end)
+      |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
   end
 
   @doc """
@@ -109,6 +110,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
       # If we haven't covered the attribute until here, we just scrab it.
       def scrub({_tag, _attributes, children}), do: children
+
       def scrub({_tag, children}), do: children
 
       # Text is left alone
@@ -118,37 +120,37 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
 
 
-  defp allow_this_tag_and_scrub_its_attributes(name) do
+  defp allow_this_tag_and_scrub_its_attributes(tag_name) do
     quote do
-      def scrub({unquote(name), attributes, children}) do
-        {unquote(name), scrub_attributes(unquote(name), attributes), children}
+      def scrub({unquote(tag_name), attributes, children}) do
+        {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes), children}
       end
 
-      defp scrub_attributes(tag, attributes) do
-        Enum.map(attributes, fn(attr) -> scrub_attribute(tag, attr) end)
+      defp scrub_attributes(unquote(tag_name), attributes) do
+        Enum.map(attributes, fn(attr) -> scrub_attribute(unquote(tag_name), attr) end)
           |> Enum.reject(&(is_nil(&1)))
       end
     end
   end
 
-  defp allow_this_tag_with_these_attributes(name, attr_name) do
+  defp allow_this_tag_with_this_attribute(tag_name, attr_name) do
     quote do
-      def scrub_attribute(unquote(name), {unquote(attr_name), value}) do
+      def scrub_attribute(unquote(tag_name), {unquote(attr_name), value}) do
         {unquote(attr_name), value}
       end
     end
   end
 
-  defp allow_tag_with_uri_attribute(name, attr_name, valid_schemes) do
+  defp allow_tag_with_uri_attribute(tag_name, attr_name, valid_schemes) do
     quote do
-      def scrub_attribute(unquote(name), {unquote(attr_name), "&" <> value}) do
+      def scrub_attribute(unquote(tag_name), {unquote(attr_name), "&" <> value}) do
         nil
       end
 
       @protocol_separator ~r/:|(&#0*58)|(&#x70)|(&#x0*3a)|(%|&#37;)3A/mi
       @scheme_capture ~r/(.+?)(:|(&#0*58)|(&#x70)|(&#x0*3a)|(%|&#37;)3A)/mi
 
-      def scrub_attribute(unquote(name), {unquote(attr_name), uri}) do
+      def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
         valid_schema = false
         if String.match?(uri, @protocol_separator) do
           valid_schema = case Regex.run(@scheme_capture, uri) do
