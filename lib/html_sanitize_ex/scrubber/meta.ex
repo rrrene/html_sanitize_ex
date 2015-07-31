@@ -59,8 +59,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
         Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
 
   """
-  defmacro allow_tag_with_these_attributes(tag, list) do
-    Enum.map(list, fn name -> allow_this_tag_with_these_attributes(tag, name) end)
+  defmacro allow_tag_with_these_attributes(tag, list \\ []) do
+    list
+      |> Enum.map(fn name -> allow_this_tag_with_these_attributes(tag, name) end)
   end
 
   @doc """
@@ -75,7 +76,8 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   """
   defmacro allow_tag_with_uri_attributes(tag, list, valid_schemes) do
-    Enum.map(list, fn name -> allow_tag_with_uri_attribute(tag, name, valid_schemes) end)
+    list
+      |> Enum.map(fn name -> allow_tag_with_uri_attribute(tag, name, valid_schemes) end)
   end
 
   @doc """
