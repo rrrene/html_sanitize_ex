@@ -1,1 +1,3 @@
-%{"mochiweb": {:hex, :mochiweb, "2.12.2"}}
+%{"inch_ex": {:hex, :inch_ex, "0.4.0-dev"},
+  "mochiweb": {:hex, :mochiweb, "2.12.2"},
+  "poison": {:hex, :poison, "1.4.0"}}

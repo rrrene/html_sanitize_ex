@@ -39,7 +39,8 @@ defmodule HtmlSanitizeEx.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:mochiweb, "~> 2.12.2"}
+      {:mochiweb, "~> 2.12.2"},
+      {:inch_ex, only: :docs}
     ]
   end
 end
