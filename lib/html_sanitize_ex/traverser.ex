@@ -41,9 +41,9 @@ defmodule HtmlSanitizeEx.Traverser do
 
   # Matches things like {:comment, "this is a comment"} or {:doctype, "..."}.
   def traverse(what, _scrubber_module) do
-    IO.inspect "########################"
-    IO.inspect {:error, what}
-    IO.inspect "########################"
+    #IO.inspect "########################"
+    #IO.inspect {:error, what}
+    #IO.inspect "########################"
     what
   end
 
