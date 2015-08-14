@@ -1,4 +1,4 @@
-# HtmlSanitizeEx [![Build Status](https://travis-ci.org/rrrene/html_sanitize_ex.svg)](https://travis-ci.org/rrrene/html_sanitize_ex)
+# HtmlSanitizeEx [![Build Status](https://travis-ci.org/rrrene/html_sanitize_ex.svg)](https://travis-ci.org/rrrene/html_sanitize_ex) [![Inline docs](http://inch-ci.org/github/rrrene/html_sanitize_ex.svg?branch=master)](http://inch-ci.org/github/rrrene/html_sanitize_ex)
 
 `html_sanitize_ex` provides a fast and straightforward HTML Sanitizer written in Elixir which lets you include HTML authored by third-parties in your web application while protecting against XSS.
 
@@ -10,7 +10,7 @@ It is the first Hex package to come out of the [elixirstatus.com](http://elixirs
 
 `html_sanitize_ex` parses a given HTML string and, based on the used [Scrubber](https://github.com/rrrene/html_sanitize_ex/tree/master/lib/html_sanitize_ex/scrubber), either completely strips it from HTML tags or sanitizes it by only allowing certain HTML elements and attributes to be present.
 
-**NOTE:** The one thing missing at this moment is ***support for styles***. To add this, we have to implement a Scrubber for CSS, to prevent nasty CSS hacks using `<style>` tags and attributes. 
+**NOTE:** The one thing missing at this moment is ***support for styles***. To add this, we have to implement a Scrubber for CSS, to prevent nasty CSS hacks using `<style>` tags and attributes.
 
 Otherwise `html_sanitize_ex` is a full-featured HTML sanitizer.
 
@@ -24,7 +24,7 @@ defp deps do
 end
 ```
 
-After adding you are done, run `mix deps.get` in your shell to fetch the new dependency.  
+After adding you are done, run `mix deps.get` in your shell to fetch the new dependency.
 
 The only dependency of `html_sanitize_ex` is `mochiweb` which is used to parse HTML.
 
