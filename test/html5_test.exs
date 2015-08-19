@@ -22,6 +22,25 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert expected == full_html_sanitize(input)
   end
 
+  test "handles css" do
+    input = "<style> div.foo { width: 500px; height: 200px; } </style>"
+    assert input == full_html_sanitize(input)
+  end
+
+  test "handles bad css" do
+    input = "<style> \@import url(javascript:alert('Your cookie:'+document.cookie)); </style>"
+    expected = "<style> @import url(:'+document.cookie)); </style>"
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "handles bad css in style attribute" do
+    input = "<h1 style=\"color: red; background-image: url('javascript:alert');  border: 1px solid brown;\">hello code!</h1>"
+    expected = "<h1 style=\"color: red; :alert');  border: 1px solid brown;\">hello code!</h1>"
+    assert expected == full_html_sanitize(input)
+  end
+
+
+
   test "strips everything except the allowed tags (for multiple tags)" do
     input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
     expected = "<section><header>code!</header><p>hello code!</p></section>"

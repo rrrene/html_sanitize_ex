@@ -140,9 +140,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   Meta.allow_tag_with_these_attributes "span", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "strong", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
 
-  # TODO: scrub evil css from style tags
-  #Meta.allow_tag_with_these_attributes "style", ["media type scoped"]
-
   Meta.allow_tag_with_these_attributes "sub", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "summary", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "sup", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
@@ -182,6 +179,27 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   Meta.allow_tag_with_these_attributes "wbr", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
 
 
+  Meta.allow_tags_with_style_attributes ["a", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "i", "iframe", "img", "input", "ins", "kbd", "keygen", "label", "legend", "li", "link", "map", "mark", "menu", "meta", "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small", "source", "span", "strong", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "video", "wbr"]
+
+
+  # style tags
+
+  def scrub({"style", attributes, [text]}) do
+    {"style", scrub_attributes("style", attributes), [scrub_css(text)]}
+  end
+
+  defp scrub_attributes("style", attributes) do
+    Enum.map(attributes, fn(attr) -> scrub_attribute("style", attr) end)
+      |> Enum.reject(&(is_nil(&1)))
+  end
+
+  def scrub_attribute("style", {"media", value}), do: {"media", value}
+  def scrub_attribute("style", {"type", value}), do: {"type", value}
+  def scrub_attribute("style", {"scoped", value}), do: {"scoped", value}
+
+  defp scrub_css(text) do
+    HtmlSanitizeEx.Scrubber.CSS.scrub(text)
+  end
 
   Meta.strip_everything_not_covered
 end

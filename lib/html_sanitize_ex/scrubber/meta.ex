@@ -82,6 +82,14 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   end
 
   @doc """
+
+  """
+  defmacro allow_tags_with_style_attributes(list) do
+    list
+      |> Enum.map(fn tag_name -> allow_this_tag_with_style_attribute(tag_name) end)
+  end
+
+  @doc """
     Removes any CDATA tags before the traverser/scrubber runs.
   """
   defmacro remove_cdata_sections_before_scrub do
@@ -137,6 +145,14 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
     quote do
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), value}) do
         {unquote(attr_name), value}
+      end
+    end
+  end
+
+  defp allow_this_tag_with_style_attribute(tag_name) do
+    quote do
+      def scrub_attribute(unquote(tag_name), {"style", value}) do
+        {"style", scrub_css(value)}
       end
     end
   end
