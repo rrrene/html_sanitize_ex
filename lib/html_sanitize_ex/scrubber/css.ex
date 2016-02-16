@@ -72,7 +72,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
 
   defp scrub_css(_, _), do: nil
 
-  defp validate({property, ""}), do: nil
+  defp validate({_property, ""}), do: nil
   defp validate({property, val}), do: {property, val}
 
   defp scrub_val(val) do
