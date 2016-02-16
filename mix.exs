@@ -9,7 +9,7 @@ defmodule HtmlSanitizeEx.Mixfile do
       description: "HTML sanitizer for Elixir",
       source_url: "https://github.com/rrrene/html_sanitize_ex",
       package: [
-        contributors: ["René Föhring"],
+        maintainers: ["René Föhring"],
         licenses: ["MIT"],
         links: %{
          "GitHub" => "https://github.com/rrrene/html_sanitize_ex",
