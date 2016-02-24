@@ -5,6 +5,12 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
     HtmlSanitizeEx.basic_html(text)
   end
 
+  test "strips nothing" do
+    input = "This <b>is</b> <b>an</b> <i>example</i> of <u>space</u> eating."
+    expected = "This <b>is</b> <b>an</b> <i>example</i> of <u>space</u> eating."
+    assert expected == basic_html_sanitize(input)
+  end
+
   test "strips everything except the allowed tags" do
     input = "<h1>hello <script>code!</script></h1>"
     expected = "<h1>hello code!</h1>"
