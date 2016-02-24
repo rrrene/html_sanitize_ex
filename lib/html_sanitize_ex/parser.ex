@@ -22,11 +22,11 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
 
   def to_html(tokens) do
     {@my_root_node, [], ensure_list(tokens)}
-      |> :mochiweb_html.to_html
-      |> Enum.join
-      |> String.replace(~r/^<#{@my_root_node}>/, "")
-      |> String.replace(~r/<\/#{@my_root_node}>$/, "")
-      |> String.replace("&lt;/html_sanitize_ex&gt;", "")
+    |> :mochiweb_html.to_html
+    |> Enum.join
+    |> String.replace(~r/^<#{@my_root_node}>/, "")
+    |> String.replace(~r/<\/#{@my_root_node}>$/, "")
+    |> String.replace("&lt;/html_sanitize_ex&gt;", "")
   end
 
   defp ensure_list(list) do

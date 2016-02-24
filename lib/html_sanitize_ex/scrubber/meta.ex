@@ -1,84 +1,84 @@
 defmodule HtmlSanitizeEx.Scrubber.Meta do
   @moduledoc """
-    This module contains some meta-programming magic to define your own rules
-    for scrubbers.
+  This module contains some meta-programming magic to define your own rules
+  for scrubbers.
 
-    The StripTags scrubber is a good starting point:
+  The StripTags scrubber is a good starting point:
 
-        defmodule HtmlSanitizeEx.Scrubber.StripTags do
-          require HtmlSanitizeEx.Scrubber.Meta
-          alias HtmlSanitizeEx.Scrubber.Meta
+      defmodule HtmlSanitizeEx.Scrubber.StripTags do
+        require HtmlSanitizeEx.Scrubber.Meta
+        alias HtmlSanitizeEx.Scrubber.Meta
 
-          # Removes any CDATA tags before the traverser/scrubber runs.
-          Meta.remove_cdata_sections_before_scrub
+        # Removes any CDATA tags before the traverser/scrubber runs.
+        Meta.remove_cdata_sections_before_scrub
 
-          Meta.strip_comments
+        Meta.strip_comments
 
-          Meta.strip_everything_not_covered
-        end
+        Meta.strip_everything_not_covered
+      end
 
-    You can use the `allow_tag_with_uri_attributes/3` and
-    `allow_tag_with_these_attributes/2` macros to define what is allowed:
+  You can use the `allow_tag_with_uri_attributes/3` and
+  `allow_tag_with_these_attributes/2` macros to define what is allowed:
 
-        defmodule HtmlSanitizeEx.Scrubber.StripTags do
-          require HtmlSanitizeEx.Scrubber.Meta
-          alias HtmlSanitizeEx.Scrubber.Meta
+      defmodule HtmlSanitizeEx.Scrubber.StripTags do
+        require HtmlSanitizeEx.Scrubber.Meta
+        alias HtmlSanitizeEx.Scrubber.Meta
 
-          # Removes any CDATA tags before the traverser/scrubber runs.
-          Meta.remove_cdata_sections_before_scrub
+        # Removes any CDATA tags before the traverser/scrubber runs.
+        Meta.remove_cdata_sections_before_scrub
 
-          Meta.strip_comments
-
-          Meta.allow_tag_with_uri_attributes   "img", ["src"], ["http", "https"]
-          Meta.allow_tag_with_these_attributes "img", ["width", "height"]
-
-          Meta.strip_everything_not_covered
-        end
-
-    You can stack these if convenient:
+        Meta.strip_comments
 
         Meta.allow_tag_with_uri_attributes   "img", ["src"], ["http", "https"]
         Meta.allow_tag_with_these_attributes "img", ["width", "height"]
-        Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
+
+        Meta.strip_everything_not_covered
+      end
+
+  You can stack these if convenient:
+
+      Meta.allow_tag_with_uri_attributes   "img", ["src"], ["http", "https"]
+      Meta.allow_tag_with_these_attributes "img", ["width", "height"]
+      Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
 
   """
 
   @doc """
-    Allow these tags and use the regular `scrub_attribute/2` function to scrub
-    the attributes.
+  Allow these tags and use the regular `scrub_attribute/2` function to scrub
+  the attributes.
   """
   defmacro allow_tags_and_scrub_their_attributes(list) do
     Enum.map(list, fn tag_name -> allow_this_tag_and_scrub_its_attributes(tag_name) end)
   end
 
   @doc """
-    Allow the given +list+ of attributes for the specified +tag+.
+  Allow the given +list+ of attributes for the specified +tag+.
 
-        Meta.allow_tag_with_these_attributes "a", ["name", "title"]
+      Meta.allow_tag_with_these_attributes "a", ["name", "title"]
 
-        Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
+      Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
 
   """
   defmacro allow_tag_with_these_attributes(tag_name, list \\ []) do
     list
-      |> Enum.map(fn attr_name -> allow_this_tag_with_this_attribute(tag_name, attr_name) end)
-      |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
+    |> Enum.map(fn attr_name -> allow_this_tag_with_this_attribute(tag_name, attr_name) end)
+    |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
   end
 
   @doc """
-    Allow the given +list+ of attributes to contain URI information for the
-    specified +tag+.
+  Allow the given +list+ of attributes to contain URI information for the
+  specified +tag+.
 
-        # Only allow SSL-enabled and mailto links
-        Meta.allow_tag_with_uri_attributes "a", ["href"], ["https", "mailto"]
+      # Only allow SSL-enabled and mailto links
+      Meta.allow_tag_with_uri_attributes "a", ["href"], ["https", "mailto"]
 
-        # Only allow none-SSL images
-        Meta.allow_tag_with_uri_attributes "img", ["src"], ["http"]
+      # Only allow none-SSL images
+      Meta.allow_tag_with_uri_attributes "img", ["src"], ["http"]
 
   """
   defmacro allow_tag_with_uri_attributes(tag, list, valid_schemes) do
     list
-      |> Enum.map(fn name -> allow_tag_with_uri_attribute(tag, name, valid_schemes) end)
+    |> Enum.map(fn name -> allow_tag_with_uri_attribute(tag, name, valid_schemes) end)
   end
 
   @doc """
@@ -86,11 +86,11 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   """
   defmacro allow_tags_with_style_attributes(list) do
     list
-      |> Enum.map(fn tag_name -> allow_this_tag_with_style_attribute(tag_name) end)
+    |> Enum.map(fn tag_name -> allow_this_tag_with_style_attribute(tag_name) end)
   end
 
   @doc """
-    Removes any CDATA tags before the traverser/scrubber runs.
+  Removes any CDATA tags before the traverser/scrubber runs.
   """
   defmacro remove_cdata_sections_before_scrub do
     quote do
@@ -99,7 +99,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   end
 
   @doc """
-    Strips all comments.
+  Strips all comments.
   """
   defmacro strip_comments do
     quote do
@@ -108,8 +108,8 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   end
 
   @doc """
-    Ensures any tags/attributes not explicitly whitelisted until this
-    statement are stripped.
+  Ensures any tags/attributes not explicitly whitelisted until this
+  statement are stripped.
   """
   defmacro strip_everything_not_covered do
     quote do
@@ -136,7 +136,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
       defp scrub_attributes(unquote(tag_name), attributes) do
         Enum.map(attributes, fn(attr) -> scrub_attribute(unquote(tag_name), attr) end)
-          |> Enum.reject(&(is_nil(&1)))
+        |> Enum.reject(&(is_nil(&1)))
       end
     end
   end

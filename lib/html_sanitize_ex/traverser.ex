@@ -19,24 +19,25 @@ defmodule HtmlSanitizeEx.Traverser do
   end
 
   def traverse({tag, attributes, children}, scrubber_module) do
-    children = children
-                |> traverse(scrubber_module)
+    children = children |> traverse(scrubber_module)
     {tag, attributes, children}
-      |> scrubber_module.scrub
+    |> scrubber_module.scrub
   end
 
   def traverse(text, scrubber_module) when is_binary(text) do
     text
-      |> scrubber_module.scrub
+    |> scrubber_module.scrub
   end
 
   # Matches things like {:comment, "this is a comment"} or {:doctype, "..."}.
   def traverse({token, children}, scrubber_module) do
-    children = children
-                |> traverse(scrubber_module)
-                |> collapse_list
+    children =
+      children
+      |> traverse(scrubber_module)
+      |> collapse_list
+
     {token, children}
-      |> scrubber_module.scrub
+    |> scrubber_module.scrub
   end
 
   # Matches things like {:comment, "this is a comment"} or {:doctype, "..."}.

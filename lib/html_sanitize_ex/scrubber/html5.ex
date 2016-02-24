@@ -190,7 +190,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
 
   defp scrub_attributes("style", attributes) do
     Enum.map(attributes, fn(attr) -> scrub_attribute("style", attr) end)
-      |> Enum.reject(&(is_nil(&1)))
+    |> Enum.reject(&(is_nil(&1)))
   end
 
   def scrub_attribute("style", {"media", value}), do: {"media", value}

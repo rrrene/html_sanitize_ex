@@ -15,8 +15,8 @@ defmodule HtmlSanitizeExTraverserTest do
 
   def parse_to_tree(html) do
     html
-      |> HtmlSanitizeEx.Parser.parse
-      |> HtmlSanitizeEx.Traverser.traverse(StripEverythingButB)
+    |> HtmlSanitizeEx.Parser.parse
+    |> HtmlSanitizeEx.Traverser.traverse(StripEverythingButB)
   end
 
   test "should return expected tree" do
