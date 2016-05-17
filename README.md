@@ -20,7 +20,7 @@ Add html_sanitize_ex as a dependency in your `mix.exs` file.
 
 ```elixir
 defp deps do
-  [{:html_sanitize_ex, "~> 0.1.0"}]
+  [{:html_sanitize_ex, "~> 1.0.0"}]
 end
 ```
 
