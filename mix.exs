@@ -4,7 +4,7 @@ defmodule HtmlSanitizeEx.Mixfile do
   def project do
     [
       app: :html_sanitize_ex,
-      version: "0.3.1",
+      version: "1.0.0",
       elixir: "~> 1.0",
       description: "HTML sanitizer for Elixir",
       source_url: "https://github.com/rrrene/html_sanitize_ex",
