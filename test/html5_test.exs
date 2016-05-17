@@ -5,6 +5,11 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     HtmlSanitizeEx.html5(text)
   end
 
+  test "strips nothing" do
+    input = "This <b>is</b> <b>an</b> <i>example</i> of <u>space</u> eating."
+    assert input == full_html_sanitize(input)
+  end
+
   test "leaves the allowed tags alone" do
     input = "<h1 class=\"heading\">hello world!</h1>"
     expected = "<h1 class=\"heading\">hello world!</h1>"

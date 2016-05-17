@@ -33,6 +33,8 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   Meta.allow_tag_with_these_attributes "a", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate",
                                               "target", "ping", "rel", "media", "hreflang", "type"]
 
+  Meta.allow_tag_with_these_attributes "b", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
+
   Meta.allow_tag_with_these_attributes "h1", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "h2", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "h3", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]

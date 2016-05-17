@@ -99,7 +99,7 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   @tag href_scrubbing: true
   test "test_strip_links_with_line_feed_and_uppercase_tag" do
     input = "<a href='almost'>on my mind</a> <A href='almost'>all day long</A>"
-    assert "<a href=\"almost\">on my mind</a><a href=\"almost\">all day long</a>" == basic_html_sanitize(input)
+    assert "<a href=\"almost\">on my mind</a> <a href=\"almost\">all day long</a>" == basic_html_sanitize(input)
   end
 
   @tag href_scrubbing: true
