@@ -76,7 +76,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
   defp validate({property, val}), do: {property, val}
 
   defp scrub_val(val) do
-    if String.match?(val, ~r/(\\|&)/), do: val = ""
+    val = if String.match?(val, ~r/(\\|&)/), do: "", else: val
 
     Regex.replace(~r/(\S+)/, val, fn _all, a ->
       if(allowed_keyword?(a) || measured_unit?(a), do: a, else: "")
