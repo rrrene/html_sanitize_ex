@@ -167,16 +167,15 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       @scheme_capture ~r/(.+?)(:|(&#0*58)|(&#x70)|(&#x0*3a)|(%|&#37;)3A)/mi
 
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
-        valid_schema = false
-        if String.match?(uri, @protocol_separator) do
-          valid_schema = case Regex.run(@scheme_capture, uri) do
+        valid_schema = if String.match?(uri, @protocol_separator) do
+          case Regex.run(@scheme_capture, uri) do
             [_, scheme, _] ->
               Enum.any?(unquote(valid_schemes), fn x -> x == scheme end)
             nil ->
               false
           end
         else
-          valid_schema = true
+          true
         end
         if valid_schema, do: {unquote(attr_name), uri}
       end
