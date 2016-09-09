@@ -1,7 +1,9 @@
-defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
+defmodule HtmlSanitizeEx.Scrubber.MarkdownHTML do
   @moduledoc """
   Allows basic HTML tags to support user input for writing relatively
-  plain text but allowing headings, links, bold, and so on.
+  plain text with Markdown (GitHub flavoured Markdown supported).
+
+  Technically this is a more relaxed version of the BasicHTML scrubber.
 
   Does not allow any mailto-links, styling, HTML5 tags, video embeds etc.
   """
@@ -22,7 +24,7 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   Meta.allow_tag_with_these_attributes "b", []
   Meta.allow_tag_with_these_attributes "blockquote", []
   Meta.allow_tag_with_these_attributes "br", []
-  Meta.allow_tag_with_these_attributes "code", []
+  Meta.allow_tag_with_these_attributes "code", ["class"]
   Meta.allow_tag_with_these_attributes "del", []
   Meta.allow_tag_with_these_attributes "em", []
   Meta.allow_tag_with_these_attributes "h1", []
