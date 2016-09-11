@@ -22,6 +22,12 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
     assert expected == sanitize(input)
   end
 
+  test "allows target=_blank inside <a>" do
+    input = ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+    expected = ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+    assert expected == sanitize(input)
+  end
+
   test "strips everything except the allowed tags (for multiple tags)" do
     input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
     expected = "code!<p>hello code!</p>"
@@ -52,7 +58,7 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   end
 
   test "strips certain tags in multi line strings" do
-    input = "<title>This is <b>a <a href=\"\" target=\"_blank\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
+    input = "<title>This is <b>a <a href=\"\" target=\"_top\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
     expected = "This is <b>a <a href=\"\">test</a></b>.<p>It no <b>longer <strong>contains <em>any HTML</em>.</strong></b></p>"
     assert expected == sanitize(input)
   end

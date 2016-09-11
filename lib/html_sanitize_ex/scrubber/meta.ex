@@ -57,12 +57,26 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       Meta.allow_tag_with_these_attributes "a", ["name", "title"]
 
       Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
-
   """
   defmacro allow_tag_with_these_attributes(tag_name, list \\ []) do
     list
     |> Enum.map(fn attr_name -> allow_this_tag_with_this_attribute(tag_name, attr_name) end)
     |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
+  end
+
+  @doc """
+  Allow the given list of +values+ for the given +attribute+ on the
+  specified +tag+.
+
+      Meta.allow_tag_with_this_attribute_values "a", "target", ["_blank"]
+  """
+  defmacro allow_tag_with_this_attribute_values(tag_name, attribute, values) do
+    quote do
+      def scrub_attribute(unquote(tag_name), {unquote(attribute), value})
+          when value in unquote(values) do
+        {unquote(attribute), value}
+      end
+    end
   end
 
   @doc """
@@ -74,7 +88,6 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
       # Only allow none-SSL images
       Meta.allow_tag_with_uri_attributes "img", ["src"], ["http"]
-
   """
   defmacro allow_tag_with_uri_attributes(tag, list, valid_schemes) do
     list
