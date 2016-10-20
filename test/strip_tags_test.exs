@@ -237,7 +237,19 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
     assert expected == strip_tags(input)
   end
 
-  test "should_sanitize_neverending_attribute" do
+  test "should sanitize neverending attribute" do
     assert "" == strip_tags("<span class=\"\\")
+  end
+
+  test "should not destroy white-space" do
+    assert "some\r\ntext" == strip_tags("some\r\ntext")
+  end
+
+  test "should not destroy white-space /2" do
+    assert "sometext with break between tags\r\nwill remove break" == strip_tags("some<b>text with break between tags</b>\r\n<i>will remove break</i>")
+  end
+
+  test "should not destroy white-space /3" do
+    assert "some text\r\nbreak only from one side" == strip_tags("some text\r\n<b>break only from one side</b>")
   end
 end
