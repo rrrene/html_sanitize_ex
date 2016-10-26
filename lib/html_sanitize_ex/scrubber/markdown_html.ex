@@ -22,6 +22,7 @@ defmodule HtmlSanitizeEx.Scrubber.MarkdownHTML do
   Meta.allow_tag_with_these_attributes "a", ["name", "title"]
 
   Meta.allow_tag_with_this_attribute_values "a", "target", ["_blank"]
+  Meta.allow_tag_with_this_attribute_values "a", "rel", ["noopener", "noreferrer"]
 
   Meta.allow_tag_with_these_attributes "b", []
   Meta.allow_tag_with_these_attributes "blockquote", []

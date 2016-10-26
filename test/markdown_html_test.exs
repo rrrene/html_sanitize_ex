@@ -28,6 +28,30 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
     assert expected == sanitize(input)
   end
 
+  test "disallows anything else for target= inside <a>" do
+    input = ~S(<a href="test.html" target="asdf" name="testpoint">hello world</a>)
+    expected = ~S(<a href="test.html" name="testpoint">hello world</a>)
+    assert expected == sanitize(input)
+  end
+
+  test "allows rel=noopener inside <a>" do
+    input = ~S(<a href="test.html" target="_blank" rel="noopener" name="testpoint">hello world</a>)
+    expected = ~S(<a href="test.html" target="_blank" rel="noopener" name="testpoint">hello world</a>)
+    assert expected == sanitize(input)
+  end
+
+  test "allows rel=noreferrer inside <a>" do
+    input = ~S(<a href="test.html" target="_blank" rel="noreferrer" name="testpoint">hello world</a>)
+    expected = ~S(<a href="test.html" target="_blank" rel="noreferrer" name="testpoint">hello world</a>)
+    assert expected == sanitize(input)
+  end
+
+  test "disallows anything else for rel= inside <a>" do
+    input = ~S(<a href="test.html" target="_blank" rel="asdf" name="testpoint">hello world</a>)
+    expected = ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+    assert expected == sanitize(input)
+  end
+
   test "strips everything except the allowed tags (for multiple tags)" do
     input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
     expected = "code!<p>hello code!</p>"
