@@ -37,7 +37,7 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
 
   test "strips tags in multi line strings" do
     input = "<title>This is <b>a <a href=\"\" target=\"_blank\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
-    expected = "This is a test.It no longer contains any HTML."
+    expected = "This is a test.\n\n\n\nIt no longer contains any HTML.\n"
     assert expected == strip_tags(input)
   end
 

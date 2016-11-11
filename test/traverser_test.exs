@@ -26,7 +26,7 @@ defmodule HtmlSanitizeExTraverserTest do
   end
 
   test "should return expected tree 2" do
-    input = "<title>This is <b>the <a href=\"http://me@example.com\" target=\"_blank\">test</a></b>.</title>\n\n\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
+    input = "<title>This is <b>the <a href=\"http://me@example.com\" target=\"_blank\">test</a></b>.</title><p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>"
     expected = ["This is ", {"b", [], ["the ", "test"]}, ".", "It no ", {"b", [], ["longer ", "contains ", "any ", "HTML", "."]}]
     assert expected == parse_to_tree(input)
   end
