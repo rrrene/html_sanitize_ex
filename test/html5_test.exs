@@ -11,9 +11,8 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
   end
 
   test "leaves the allowed tags alone" do
-    input = "<h1 class=\"heading\">hello world!</h1>"
-    expected = "<h1 class=\"heading\">hello world!</h1>"
-    assert expected == full_html_sanitize(input)
+    input = ~S(<h1 class="heading" style="font-weight: bold">hello world!</h1>)
+    assert input == full_html_sanitize(input)
   end
 
   test "leaves the allowed tags alone 2" do
