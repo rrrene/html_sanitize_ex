@@ -43,11 +43,20 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert expected == full_html_sanitize(input)
   end
 
-
-
   test "strips everything except the allowed tags (for multiple tags)" do
     input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
     expected = "<section><header>code!</header><p>hello code!</p></section>"
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "handles svg" do
+    input = "<svg class=\"svg\"><use xlink:href=\"svguse\"></use></svg>"
+    assert input == full_html_sanitize(input)
+  end
+
+  test "handles bad css" do
+    input = "<svg onload=\"badsvg\"><use onload=\"badsvguse\"></use></svg>"
+    expected = "<svg><use></use></svg>"
     assert expected == full_html_sanitize(input)
   end
 end
