@@ -54,4 +54,10 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     expected = "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
     assert expected == full_html_sanitize(input)
   end
+
+  test "does not strip divs" do
+    input = ~s(<div class="a"><div class="b">Hello</div></div>)
+    expected = ~s(<div class="a"><div class="b">Hello</div></div>)
+    assert expected == full_html_sanitize(input)
+  end
 end
