@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+- Update `mochiweb` version requirement
+- Fix missing elements in HTML5: div, caption
+
 ## 1.1.1
 
 - Fix missing element in HTML5: blockquote
