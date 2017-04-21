@@ -43,11 +43,21 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert expected == full_html_sanitize(input)
   end
 
-
-
   test "strips everything except the allowed tags (for multiple tags)" do
     input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
     expected = "<section><header>code!</header><p>hello code!</p></section>"
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "does not strip caption from tables" do
+    input = "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+    expected = "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "does not strip divs" do
+    input = ~s(<div class="a"><div class="b">Hello</div></div>)
+    expected = ~s(<div class="a"><div class="b">Hello</div></div>)
     assert expected == full_html_sanitize(input)
   end
 end

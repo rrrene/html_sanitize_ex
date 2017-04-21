@@ -37,9 +37,11 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
 
   Meta.allow_tag_with_these_attributes "blockquote", ["accesskey", "cite", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "br", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "spellcheck",   "tabindex", "title", "translate"]
+  Meta.allow_tag_with_these_attributes "caption", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
 
   Meta.allow_tag_with_these_attributes "code", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "del", ["accesskey", "cite", "datetime", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "spellcheck", "tabindex", "title", "translate"]
+  Meta.allow_tag_with_these_attributes "div", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "em", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "spellcheck", "tabindex", "title", "translate"]
 
   Meta.allow_tag_with_these_attributes "h1", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
