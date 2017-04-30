@@ -54,7 +54,7 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
   test "strips certain tags in multi line strings" do
     input = "<title>This is <b>a <a href=\"\" target=\"_blank\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
-    expected = "This is <b>a <a href=\"\">test</a></b>.<p>It no <b>longer <strong>contains <em>any HTML</em>.</strong></b></p>"
+    expected = "This is <b>a <a href=\"\">test</a></b>.\n\n\n\n<p>It no <b>longer <strong>contains <em>any HTML</em>.</strong></b></p>\n"
     assert expected == basic_html_sanitize(input)
   end
 
@@ -110,7 +110,7 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
   @tag href_scrubbing: true
   test "test_strip_links_leaves_nonlink_tags" do
-    assert "<a href=\"almost\">My mind</a><a href=\"almost\">all <b>day</b> long</a>" == basic_html_sanitize("<a href='almost'>My mind</a>\n<A href='almost'>all <b>day</b> long</A>")
+    assert "<a href=\"almost\">My mind</a>\n<a href=\"almost\">all <b>day</b> long</a>" == basic_html_sanitize("<a href='almost'>My mind</a>\n<A href='almost'>all <b>day</b> long</A>")
   end
 
   @tag href_scrubbing: true

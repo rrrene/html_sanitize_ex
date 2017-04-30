@@ -10,14 +10,19 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
   @type html_tree :: tuple | list
 
   @my_root_node "html_sanitize_ex"
+  @linebreak [239, 188, 191]
 
   @spec parse(binary) :: html_tree
 
   def parse(html) do
-    html = "<#{@my_root_node}>#{html}</#{@my_root_node}>"
+    html = "<#{@my_root_node}>#{before_parse(html)}</#{@my_root_node}>"
     {@my_root_node, [], parsed} = :mochiweb_html.parse(html)
 
     if length(parsed) == 1, do: hd(parsed), else: parsed
+  end
+
+  defp before_parse(html) do
+    String.replace(html, ~r/(>)(\r?\n)/, "\\1 #{@linebreak} \\2")
   end
 
   def to_html(tokens) do
@@ -27,6 +32,11 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
     |> String.replace(~r/^<#{@my_root_node}>/, "")
     |> String.replace(~r/<\/#{@my_root_node}>$/, "")
     |> String.replace("&lt;/html_sanitize_ex&gt;", "")
+    |> after_to_html()
+  end
+
+  defp after_to_html(html) do
+    String.replace(html, ~r/(\ ?#{@linebreak} )(\r?\n)/, "\\2")
   end
 
   defp ensure_list(list) do
