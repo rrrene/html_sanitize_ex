@@ -378,4 +378,10 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   #  expected = "<div>foo</div>"
   #  assert expected == sanitize(input)
   #end
+
+  test "does not strip the mailto URI scheme" do
+    input = ~s(<a href="mailto:someone@yoursite.com">Email Us</a>)
+    expected = ~s(<a href="mailto:someone@yoursite.com">Email Us</a>)
+    assert expected == sanitize(input)
+  end
 end

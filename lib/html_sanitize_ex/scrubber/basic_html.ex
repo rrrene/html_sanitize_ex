@@ -9,7 +9,7 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   require HtmlSanitizeEx.Scrubber.Meta
   alias HtmlSanitizeEx.Scrubber.Meta
 
-  @valid_schemes ["http", "https"]
+  @valid_schemes ["http", "https", "mailto"]
 
   # Removes any CDATA tags before the traverser/scrubber runs.
   Meta.remove_cdata_sections_before_scrub
