@@ -3,6 +3,7 @@
 ## 1.3.0
 
 - Add valid scheme for links: `mailto`
+- Update white-space handling in order to keep more of it untouched
 
 ## 1.2.0
 
