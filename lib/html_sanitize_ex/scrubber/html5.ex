@@ -27,7 +27,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
 
   Meta.strip_comments
 
-  @valid_schemes ["http", "https"]
+  @valid_schemes ["http", "https", "mailto"]
 
   Meta.allow_tag_with_uri_attributes   "a", ["href"], @valid_schemes
   Meta.allow_tag_with_these_attributes "a", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate",
