@@ -10,7 +10,8 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
   @type html_tree :: tuple | list
 
   @my_root_node "html_sanitize_ex"
-  @linebreak [239, 188, 191]
+  @replacement_linebreak [239, 188, 191]
+  @replacement_space [239, 189, 191]
 
   @spec parse(binary) :: html_tree
 
@@ -22,7 +23,9 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
   end
 
   defp before_parse(html) do
-    String.replace(html, ~r/(>)(\r?\n)/, "\\1 #{@linebreak} \\2")
+    html
+    |> String.replace(~r/(>)(\r?\n)/, "\\1 #{@replacement_linebreak} \\2")
+    |> String.replace(~r/(>)(\ +)(<)/, "\\1 #{@replacement_space}\\2\\3")
   end
 
   def to_html(tokens) do
@@ -36,7 +39,9 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
   end
 
   defp after_to_html(html) do
-    String.replace(html, ~r/(\ ?#{@linebreak} )(\r?\n)/, "\\2")
+    html
+    |> String.replace(~r/(\ ?#{@replacement_linebreak} )(\r?\n)/, "\\2")
+    |> String.replace(~r/(\&gt\;|>)(\ +)(#{@replacement_space})(\ +)(\&lt\;|<)/, "\\1\\4\\5")
   end
 
   defp ensure_list(list) do

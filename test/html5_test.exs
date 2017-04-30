@@ -66,4 +66,10 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     expected = ~s(<a href="mailto:someone@yoursite.com">Email Us</a>)
     assert expected == full_html_sanitize(input)
   end
+
+  test "does encode script in textarea, but preserves white-space" do
+    input = ~s(<textarea> <script></script></textarea>)
+    expected = ~s(<textarea> &lt;script&gt;&lt;/script&gt;</textarea>)
+    assert expected == full_html_sanitize(input)
+  end
 end
