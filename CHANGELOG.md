@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+- Add valid scheme for links: `mailto`
+
 ## 1.2.0
 
 - Update `mochiweb` version requirement
