@@ -17,15 +17,15 @@ defmodule HtmlSanitizeExScrubberCSSTest do
     end)
   end
 
-  @good_css_background [
-      "h1 { background: url(http://foobar.com/meh.jpg)}",
-    ]
+  #@good_css_background [
+  #    "h1 { background: url(http://foobar.com/meh.jpg)}",
+  #  ]
 
-  test "should return valid css 2" do
+  #test "should return valid css 2" do
   #  Enum.each(@good_css_background, fn text ->
   #    assert text == scrub_css(text)
   #  end)
-  end
+  #end
 
   @evil_css [
       "div.foo { width: 500px; behavior: url(http://foo.com); height: 200px; }",
