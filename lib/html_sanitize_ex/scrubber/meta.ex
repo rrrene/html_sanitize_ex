@@ -125,6 +125,10 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   statement are stripped.
   """
   defmacro strip_everything_not_covered do
+    replacement_linebreak = "#{HtmlSanitizeEx.Parser.replacement_for_linebreak}"
+    replacement_space = "#{HtmlSanitizeEx.Parser.replacement_for_space}"
+    replacement_tab = "#{HtmlSanitizeEx.Parser.replacement_for_tab}"
+
     quote do
       # If we haven't covered the attribute until here, we just scrab it.
       def scrub_attribute(_tag, _attribute), do: nil
@@ -134,8 +138,12 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
       def scrub({_tag, children}), do: children
 
+      def scrub(unquote(" " <> replacement_linebreak <> " ") <> text), do: text
+      def scrub(unquote(" " <> replacement_space <> " ") <> text), do: " " <> text
+      def scrub(unquote(" " <> replacement_tab <> " ") <> text), do: text
+
       # Text is left alone
-      def scrub(text), do: text
+      def scrub("" <> text), do: text
     end
   end
 

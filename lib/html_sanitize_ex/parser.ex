@@ -31,7 +31,7 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
   end
 
   def to_html(tokens) do
-    {@my_root_node, [], ensure_list(tokens)}
+    {@my_root_node, [], List.wrap(tokens)}
     |> :mochiweb_html.to_html
     |> Enum.join
     |> String.replace(~r/^<#{@my_root_node}>/, "")
@@ -47,10 +47,12 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
     |> String.replace(~r/(\&gt\;|>)(\ +)(#{@replacement_tab})(\t+)(\&lt\;|<)/, "\\1\\4\\5")
   end
 
-  defp ensure_list(list) do
-    case list do
-      [_head | _tail] -> list
-      _ -> [list]
-    end
-  end
+  @doc false
+  def replacement_for_linebreak, do: @replacement_linebreak
+
+  @doc false
+  def replacement_for_space, do: @replacement_space
+
+  @doc false
+  def replacement_for_tab, do: @replacement_tab
 end
