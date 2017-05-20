@@ -72,4 +72,10 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     expected = ~s(<textarea> &lt;script&gt;&lt;/script&gt;</textarea>)
     assert expected == full_html_sanitize(input)
   end
+
+  test "does not contain replacement characters in result" do
+    input = ~s[<script>alert()</script> <p>Hi</p>]
+    expected = ~s[alert() <p>Hi</p>]
+    assert expected == full_html_sanitize(input)
+  end
 end
