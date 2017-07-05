@@ -83,7 +83,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
     end)
   end
 
-  @allowed_keywords ["auto", "aqua", "black", "block", "blue", "bold", "both", "bottom", "brown", "center", "collapse", "dashed", "dotted", "fuchsia", "gray", "green", "!important", "italic", "left", "lime", "maroon", "medium", "none", "navy", "normal", "nowrap", "olive", "pointer", "purple", "red", "right", "solid", "silver", "teal", "top", "transparent", "underline", "white", "yellow"]
+  @allowed_keywords ["auto", "aqua", "black", "block", "blue", "bold", "both", "bottom", "brown", "center", "collapse", "dashed", "dotted", "fuchsia", "gray", "green", "!important", "italic", "left", "lime", "maroon", "medium", "middle", "none", "navy", "normal", "nowrap", "olive", "pointer", "purple", "red", "right", "solid", "silver", "teal", "top", "transparent", "underline", "white", "yellow"]
 
   def allowed_keyword?(val) do
     Enum.member?(@allowed_keywords, String.downcase(val))
