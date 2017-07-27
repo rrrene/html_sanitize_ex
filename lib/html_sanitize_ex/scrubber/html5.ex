@@ -36,6 +36,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   Meta.allow_tag_with_these_attributes "b", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
 
   Meta.allow_tag_with_these_attributes "blockquote", ["accesskey", "cite", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "spellcheck", "tabindex", "title", "translate"]
+  Meta.allow_tag_with_these_attributes "body", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "br", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "spellcheck",   "tabindex", "title", "translate"]
   Meta.allow_tag_with_these_attributes "caption", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
 
