@@ -32,6 +32,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   Meta.allow_tag_with_uri_attributes   "a", ["href"], @valid_schemes
   Meta.allow_tag_with_these_attributes "a", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate",
                                               "target", "ping", "rel", "media", "hreflang", "type"]
+  Meta.allow_tag_with_these_attributes "article", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
 
   Meta.allow_tag_with_these_attributes "b", ["accesskey", "class", "contenteditable", "contextmenu", "dir", "draggable", "dropzone", "hidden", "id", "inert", "itemid", "itemprop", "itemref", "itemscope", "itemtype", "lang", "role", "spellcheck", "tabindex", "title", "translate"]
 
