@@ -340,6 +340,11 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
     assert input == basic_html_sanitize(input)
   end
 
+  test "should_not_crash_on_invalid_schema_formatting" do
+    input = "<a href=\"http//www.domain.com/?encoded_param=param1%3Aparam2\">text here</a>"
+    assert "<a>text here</a>" == basic_html_sanitize(input)
+  end
+
   test "should_sanitize_neverending_attribute" do
     assert "<span></span>" == basic_html_sanitize("<span class=\"\\")
   end
