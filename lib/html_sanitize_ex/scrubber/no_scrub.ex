@@ -35,8 +35,8 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
 
   @doc false
   def scrub_attributes(tag, attributes) do
-    Enum.map(attributes, fn(attr) -> scrub_attribute(tag, attr) end)
-    |> Enum.reject(&(is_nil(&1)))
+    Enum.map(attributes, fn attr -> scrub_attribute(tag, attr) end)
+    |> Enum.reject(&is_nil(&1))
   end
 
   @doc """

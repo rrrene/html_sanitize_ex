@@ -45,7 +45,9 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
   test "strips tags with quote" do
     input = "<\" <img src=\"trollface.gif\" onload=\"alert(1)\"> hi"
-    assert "&lt;\" <img src=\"trollface.gif\" /> hi" == basic_html_sanitize(input)
+
+    assert "&lt;\" <img src=\"trollface.gif\" /> hi" ==
+             basic_html_sanitize(input)
   end
 
   test "strips nested tags" do
@@ -126,7 +128,8 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
   @tag href_scrubbing: true
   test "strips tags with basic_html_sanitize/1" do
-    input = "<p>This <u>is</u> a <a href='test.html'><strong>test</strong></a>.</p>"
+    input =
+      "<p>This <u>is</u> a <a href='test.html'><strong>test</strong></a>.</p>"
 
     assert "<p>This <u>is</u> a <a href=\"test.html\"><strong>test</strong></a>.</p>" ==
              basic_html_sanitize(input)
@@ -164,7 +167,10 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   @tag href_scrubbing: true
   test "strips malicious protocol hacks from a href attribute" do
     expected = "<a>text here</a>"
-    Enum.each(@a_href_hacks, fn x -> assert expected == basic_html_sanitize(x) end)
+
+    Enum.each(@a_href_hacks, fn x ->
+      assert expected == basic_html_sanitize(x)
+    end)
   end
 
   @tag href_scrubbing: true
@@ -192,7 +198,8 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   end
 
   test "test_strip_links_with_a_tag_in_href" do
-    assert "FrrFox" == basic_html_sanitize("<href onlclick='steal()'>FrrFox</a></href>")
+    assert "FrrFox" ==
+             basic_html_sanitize("<href onlclick='steal()'>FrrFox</a></href>")
   end
 
   test "normal scrubbing does only allow certain tags and attributes" do
@@ -202,7 +209,9 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   end
 
   test "strips not allowed attributes" do
-    input = "start <a title=\"1\" onclick=\"foo\">foo <bad>bar</bad> baz</a> end"
+    input =
+      "start <a title=\"1\" onclick=\"foo\">foo <bad>bar</bad> baz</a> end"
+
     expected = "start <a title=\"1\">foo bar baz</a> end"
     assert expected == basic_html_sanitize(input)
   end
@@ -219,7 +228,8 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
     input =
       ~s(onthis="do that" <a href="#" onclick="hello" name="foo" onbogus="remove me">hello</a>)
 
-    assert "onthis=\"do that\" <a href=\"#\" name=\"foo\">hello</a>" == basic_html_sanitize(input)
+    assert "onthis=\"do that\" <a href=\"#\" name=\"foo\">hello</a>" ==
+             basic_html_sanitize(input)
   end
 
   test "sanitize_javascript_href" do
@@ -241,7 +251,9 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   @tag href_scrubbing: true
   test "should only allow http/https protocols" do
     assert "<a href=\"foo\">baz</a>" ==
-             basic_html_sanitize(~s(<a href="foo" onclick="bar"><script>baz</script></a>))
+             basic_html_sanitize(
+               ~s(<a href="foo" onclick="bar"><script>baz</script></a>)
+             )
 
     assert "<a href=\"http://example.com\">baz</a>" ==
              basic_html_sanitize(
@@ -291,7 +303,10 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
   test "strips malicious protocol hacks from img src attribute" do
     expected = "<img />"
-    Enum.each(@image_src_hacks, fn x -> assert expected == basic_html_sanitize(x) end)
+
+    Enum.each(@image_src_hacks, fn x ->
+      assert expected == basic_html_sanitize(x)
+    end)
   end
 
   test "strips script tag" do
@@ -307,7 +322,8 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   end
 
   test "should_sanitize_tag_broken_up_by_null" do
-    assert "alert(\"XSS\")" == basic_html_sanitize("<SCR\0IPT>alert(\"XSS\")</SCR\0IPT>")
+    assert "alert(\"XSS\")" ==
+             basic_html_sanitize("<SCR\0IPT>alert(\"XSS\")</SCR\0IPT>")
   end
 
   test "should_sanitize_invalid_script_tag" do
@@ -334,7 +350,9 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   end
 
   test "should_sanitize_within attributes" do
-    input = "<span title=\"&#39;&gt;&lt;script&gt;alert()&lt;/script&gt;\">blah</span>"
+    input =
+      "<span title=\"&#39;&gt;&lt;script&gt;alert()&lt;/script&gt;\">blah</span>"
+
     assert "<span>blah</span>" == basic_html_sanitize(input)
   end
 
@@ -343,34 +361,42 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
   test "should_sanitize_non_alpha_and_non_digit_characters_in_tags" do
     assert "<a></a>foo" ==
-             basic_html_sanitize("<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>")
+             basic_html_sanitize(
+               "<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>"
+             )
   end
 
   test "should_sanitize_invalid_tag_names_in_single_tags" do
-    assert "<img />" == basic_html_sanitize("<img/src=\"http://ha.ckers.org/xss.js\"/>")
+    assert "<img />" ==
+             basic_html_sanitize("<img/src=\"http://ha.ckers.org/xss.js\"/>")
   end
 
   test "should_sanitize_img_dynsrc_lowsrc" do
-    assert "<img />" == basic_html_sanitize("<img lowsrc=\"javascript:alert('XSS')\" />")
+    assert "<img />" ==
+             basic_html_sanitize("<img lowsrc=\"javascript:alert('XSS')\" />")
   end
 
   test "should_sanitize_img_vbscript" do
-    assert "<img />" == basic_html_sanitize("<img src='vbscript:msgbox(\"XSS\")' />")
+    assert "<img />" ==
+             basic_html_sanitize("<img src='vbscript:msgbox(\"XSS\")' />")
   end
 
   @tag cdata: true
   test "should_sanitize_cdata_section" do
-    assert "<span>section</span>]]&gt;" == basic_html_sanitize("<![CDATA[<span>section</span>]]>")
+    assert "<span>section</span>]]&gt;" ==
+             basic_html_sanitize("<![CDATA[<span>section</span>]]>")
   end
 
   @tag cdata: true
   test "should_sanitize_cdata_section like any other" do
-    assert "section]]&gt;" == basic_html_sanitize("<![CDATA[<script>section</script>]]>")
+    assert "section]]&gt;" ==
+             basic_html_sanitize("<![CDATA[<script>section</script>]]>")
   end
 
   @tag cdata: true
   test "should_sanitize_unterminated_cdata_section" do
-    assert "<span>neverending...</span>" == basic_html_sanitize("<![CDATA[<span>neverending...")
+    assert "<span>neverending...</span>" ==
+             basic_html_sanitize("<![CDATA[<span>neverending...")
   end
 
   @tag cdata: true
@@ -386,7 +412,9 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   end
 
   test "should_not_crash_on_invalid_schema_formatting" do
-    input = "<a href=\"http//www.domain.com/?encoded_param=param1%3Aparam2\">text here</a>"
+    input =
+      "<a href=\"http//www.domain.com/?encoded_param=param1%3Aparam2\">text here</a>"
+
     assert "<a>text here</a>" == basic_html_sanitize(input)
   end
 

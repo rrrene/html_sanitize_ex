@@ -15,19 +15,32 @@ defmodule HtmlSanitizeExTraverserTest do
 
   def parse_to_tree(html) do
     html
-    |> HtmlSanitizeEx.Parser.parse
+    |> HtmlSanitizeEx.Parser.parse()
     |> HtmlSanitizeEx.Traverser.traverse(StripEverythingButB)
   end
 
   test "should return expected tree" do
-    input = "hello! <section><b><script>code!</script></b><p>hello <script>code!</script></p></section>"
+    input =
+      "hello! <section><b><script>code!</script></b><p>hello <script>code!</script></p></section>"
+
     expected = ["hello! ", {"b", [], ["code!"]}, "hello ", "code!"]
     assert expected == parse_to_tree(input)
   end
 
   test "should return expected tree 2" do
-    input = "<title>This is <b>the <a href=\"http://me@example.com\" target=\"_blank\">test</a></b>.</title>\n\n\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
-    expected = ["This is ", {"b", [], ["the ", "test"]}, ".", " ï¼¿ \n\n\n\n", "It no ", {"b", [], ["longer ", "contains ", "any ", "HTML", "."]}, " ï¼¿ \n"]
+    input =
+      "<title>This is <b>the <a href=\"http://me@example.com\" target=\"_blank\">test</a></b>.</title>\n\n\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
+
+    expected = [
+      "This is ",
+      {"b", [], ["the ", "test"]},
+      ".",
+      " ï¼¿ \n\n\n\n",
+      "It no ",
+      {"b", [], ["longer ", "contains ", "any ", "HTML", "."]},
+      " ï¼¿ \n"
+    ]
+
     assert expected == parse_to_tree(input)
   end
 

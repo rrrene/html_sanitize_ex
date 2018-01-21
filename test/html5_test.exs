@@ -32,26 +32,38 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
   end
 
   test "handles bad css" do
-    input = "<style> \@import url(javascript:alert('Your cookie:'+document.cookie)); </style>"
+    input =
+      "<style> \@import url(javascript:alert('Your cookie:'+document.cookie)); </style>"
+
     expected = "<style> @import url(:'+document.cookie)); </style>"
     assert expected == full_html_sanitize(input)
   end
 
   test "handles bad css in style attribute" do
-    input = "<h1 style=\"color: red; background-image: url('javascript:alert');  border: 1px solid brown;\">hello code!</h1>"
-    expected = "<h1 style=\"color: red; :alert');  border: 1px solid brown;\">hello code!</h1>"
+    input =
+      "<h1 style=\"color: red; background-image: url('javascript:alert');  border: 1px solid brown;\">hello code!</h1>"
+
+    expected =
+      "<h1 style=\"color: red; :alert');  border: 1px solid brown;\">hello code!</h1>"
+
     assert expected == full_html_sanitize(input)
   end
 
   test "strips everything except the allowed tags (for multiple tags)" do
-    input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+    input =
+      "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+
     expected = "<section><header>code!</header><p>hello code!</p></section>"
     assert expected == full_html_sanitize(input)
   end
 
   test "does not strip caption from tables" do
-    input = "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
-    expected = "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+    input =
+      "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+
+    expected =
+      "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+
     assert expected == full_html_sanitize(input)
   end
 

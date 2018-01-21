@@ -12,11 +12,11 @@ defmodule HtmlSanitizeEx.Mixfile do
         maintainers: ["René Föhring"],
         licenses: ["MIT"],
         links: %{
-         "GitHub" => "https://github.com/rrrene/html_sanitize_ex",
+          "GitHub" => "https://github.com/rrrene/html_sanitize_ex"
         }
       ],
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end

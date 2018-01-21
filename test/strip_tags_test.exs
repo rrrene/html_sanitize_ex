@@ -6,7 +6,9 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
   end
 
   test "strips everything except the allowed tags (for multiple tags)" do
-    input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+    input =
+      "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+
     expected = "code!hello code!"
     assert expected == strip_tags(input)
   end
@@ -34,15 +36,17 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
     assert expected == strip_tags(input)
   end
 
-
   test "strips tags in multi line strings" do
-    input = "<title>This is <b>a <a href=\"\" target=\"_blank\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
+    input =
+      "<title>This is <b>a <a href=\"\" target=\"_blank\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
+
     expected = "This is a test.\n\n\n\nIt no longer contains any HTML.\n"
     assert expected == strip_tags(input)
   end
 
   test "strips comments" do
-    assert "This is &lt;-- not\n a comment here." == strip_tags("This is <-- not\n a comment here.")
+    assert "This is &lt;-- not\n a comment here." ==
+             strip_tags("This is <-- not\n a comment here.")
   end
 
   test "strips blank string" do
@@ -125,11 +129,13 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
   @tag href_scrubbing: true
   test "strips malicious protocol hacks from a href attribute" do
     expected = "text here"
-    Enum.each(@a_href_hacks, fn(x) -> assert expected == strip_tags(x) end)
+    Enum.each(@a_href_hacks, fn x -> assert expected == strip_tags(x) end)
   end
 
   test "test_strip links with links" do
-    input = "<a href='http://www.rubyonrails.com/'><a href='http://www.rubyonrails.com/' onlclick='steal()'>0wn3d</a></a>"
+    input =
+      "<a href='http://www.rubyonrails.com/'><a href='http://www.rubyonrails.com/' onlclick='steal()'>0wn3d</a></a>"
+
     assert "0wn3d" == strip_tags(input)
   end
 
@@ -158,11 +164,12 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
     "<IMG SRC=\"jav&#x0D;ascript:alert('XSS');\">",
     "<IMG SRC=\" &#14;  javascript:alert('XSS');\">",
     "<IMG SRC=\"javascript&#x3a;alert('XSS');\">",
-    "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>"]
+    "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>"
+  ]
 
   test "strips malicious protocol hacks from img src attribute" do
     expected = ""
-    Enum.each(@image_src_hacks, fn(x) -> assert expected == strip_tags(x) end)
+    Enum.each(@image_src_hacks, fn x -> assert expected == strip_tags(x) end)
   end
 
   test "strips script tag" do
@@ -181,8 +188,11 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
   end
 
   test "should_sanitize_script_tag_with_multiple_open_brackets" do
-    assert "&lt;alert(\"XSS\");//&lt;" == strip_tags "<<SCRIPT>alert(\"XSS\");//<</SCRIPT>"
-    assert "" == strip_tags "<iframe src=http://ha.ckers.org/scriptlet.html\n<a"
+    assert "&lt;alert(\"XSS\");//&lt;" ==
+             strip_tags("<<SCRIPT>alert(\"XSS\");//<</SCRIPT>")
+
+    assert "" ==
+             strip_tags("<iframe src=http://ha.ckers.org/scriptlet.html\n<a")
   end
 
   test "should_sanitize_unclosed_script" do
@@ -199,20 +209,29 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
     img_hack = """
     <IMG\nSRC\n=\n"\nj\na\nv\na\ns\nc\nr\ni\np\nt\n:\na\nl\ne\nr\nt\n(\n'\nX\nS\nS\n'\n)\n"\n>)
     """
+
     assert ")\n" == strip_tags(img_hack)
   end
 
   test "should_sanitize_within attributes" do
-    input = "<span title=\"&#39;&gt;&lt;script&gt;alert()&lt;/script&gt;\">blah</span>"
+    input =
+      "<span title=\"&#39;&gt;&lt;script&gt;alert()&lt;/script&gt;\">blah</span>"
+
     assert "blah" == strip_tags(input)
   end
 
   test "should_sanitize_invalid_tag_names" do
-    assert "a b cd e f" == strip_tags(~s(a b c<script/XSS src="http://ha.ckers.org/xss.js"></script>d e f))
+    assert "a b cd e f" ==
+             strip_tags(
+               ~s(a b c<script/XSS src="http://ha.ckers.org/xss.js"></script>d e f)
+             )
   end
 
   test "should_sanitize_non_alpha_and_non_digit_characters_in_tags" do
-    assert "foo" == strip_tags("<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>")
+    assert "foo" ==
+             strip_tags(
+               "<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>"
+             )
   end
 
   @tag cdata: true
@@ -246,10 +265,14 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
   end
 
   test "should not destroy white-space /2" do
-    assert "sometext with break between tags\r\nwill remove break" == strip_tags("some<b>text with break between tags</b>\r\n<i>will remove break</i>")
+    assert "sometext with break between tags\r\nwill remove break" ==
+             strip_tags(
+               "some<b>text with break between tags</b>\r\n<i>will remove break</i>"
+             )
   end
 
   test "should not destroy white-space /3" do
-    assert "some text\r\nbreak only from one side" == strip_tags("some text\r\n<b>break only from one side</b>")
+    assert "some text\r\nbreak only from one side" ==
+             strip_tags("some text\r\n<b>break only from one side</b>")
   end
 end

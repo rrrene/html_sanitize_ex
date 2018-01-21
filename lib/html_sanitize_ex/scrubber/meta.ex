@@ -48,7 +48,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   the attributes.
   """
   defmacro allow_tags_and_scrub_their_attributes(list) do
-    Enum.map(list, fn tag_name -> allow_this_tag_and_scrub_its_attributes(tag_name) end)
+    Enum.map(list, fn tag_name ->
+      allow_this_tag_and_scrub_its_attributes(tag_name)
+    end)
   end
 
   @doc """
@@ -60,7 +62,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   """
   defmacro allow_tag_with_these_attributes(tag_name, list \\ []) do
     list
-    |> Enum.map(fn attr_name -> allow_this_tag_with_this_attribute(tag_name, attr_name) end)
+    |> Enum.map(fn attr_name ->
+      allow_this_tag_with_this_attribute(tag_name, attr_name)
+    end)
     |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
   end
 
@@ -91,7 +95,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   """
   defmacro allow_tag_with_uri_attributes(tag, list, valid_schemes) do
     list
-    |> Enum.map(fn name -> allow_tag_with_uri_attribute(tag, name, valid_schemes) end)
+    |> Enum.map(fn name ->
+      allow_tag_with_uri_attribute(tag, name, valid_schemes)
+    end)
   end
 
   @doc """
@@ -125,7 +131,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   statement are stripped.
   """
   defmacro strip_everything_not_covered do
-    replacement_linebreak = "#{HtmlSanitizeEx.Parser.replacement_for_linebreak()}"
+    replacement_linebreak =
+      "#{HtmlSanitizeEx.Parser.replacement_for_linebreak()}"
+
     replacement_space = "#{HtmlSanitizeEx.Parser.replacement_for_space()}"
     replacement_tab = "#{HtmlSanitizeEx.Parser.replacement_for_tab()}"
 
@@ -139,7 +147,10 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       def scrub({_tag, children}), do: children
 
       def scrub(unquote(" " <> replacement_linebreak <> " ") <> text), do: text
-      def scrub(unquote(" " <> replacement_space <> " ") <> text), do: " " <> text
+
+      def scrub(unquote(" " <> replacement_space <> " ") <> text),
+        do: " " <> text
+
       def scrub(unquote(" " <> replacement_tab <> " ") <> text), do: text
 
       # Text is left alone
@@ -150,11 +161,14 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   defp allow_this_tag_and_scrub_its_attributes(tag_name) do
     quote do
       def scrub({unquote(tag_name), attributes, children}) do
-        {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes), children}
+        {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes),
+         children}
       end
 
       defp scrub_attributes(unquote(tag_name), attributes) do
-        Enum.map(attributes, fn attr -> scrub_attribute(unquote(tag_name), attr) end)
+        Enum.map(attributes, fn attr ->
+          scrub_attribute(unquote(tag_name), attr)
+        end)
         |> Enum.reject(&is_nil(&1))
       end
     end
@@ -188,7 +202,10 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       @http_like_scheme "(?<scheme>.+?)(#{@protocol_separator})//"
       @other_schemes "(?<other_schemes>mailto)(#{@protocol_separator})"
 
-      @scheme_capture Regex.compile!("(#{@http_like_scheme})|(#{@other_schemes})", "mi")
+      @scheme_capture Regex.compile!(
+                        "(#{@http_like_scheme})|(#{@other_schemes})",
+                        "mi"
+                      )
 
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
         valid_schema =

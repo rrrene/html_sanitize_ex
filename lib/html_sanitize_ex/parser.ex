@@ -1,4 +1,5 @@
-defmodule HtmlSanitizeEx.Parser do  @doc """
+defmodule HtmlSanitizeEx.Parser do
+  @doc """
   Parses a HTML string.
   ## Examples
       iex> Floki.parse("<div class=js-action>hello world</div>")
@@ -32,8 +33,8 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
 
   def to_html(tokens) do
     {@my_root_node, [], List.wrap(tokens)}
-    |> :mochiweb_html.to_html
-    |> Enum.join
+    |> :mochiweb_html.to_html()
+    |> Enum.join()
     |> String.replace(~r/^<#{@my_root_node}>/, "")
     |> String.replace(~r/<\/#{@my_root_node}>$/, "")
     |> String.replace("&lt;/html_sanitize_ex&gt;", "")
@@ -43,8 +44,14 @@ defmodule HtmlSanitizeEx.Parser do  @doc """
   defp after_to_html(html) do
     html
     |> String.replace(~r/(\ ?#{@replacement_linebreak} )(\r?\n)/, "\\2")
-    |> String.replace(~r/(\&gt\;|>)(\ +)(#{@replacement_space})(\ +)(\&lt\;|<)/, "\\1\\4\\5")
-    |> String.replace(~r/(\&gt\;|>)(\ +)(#{@replacement_tab})(\t+)(\&lt\;|<)/, "\\1\\4\\5")
+    |> String.replace(
+      ~r/(\&gt\;|>)(\ +)(#{@replacement_space})(\ +)(\&lt\;|<)/,
+      "\\1\\4\\5"
+    )
+    |> String.replace(
+      ~r/(\&gt\;|>)(\ +)(#{@replacement_tab})(\t+)(\&lt\;|<)/,
+      "\\1\\4\\5"
+    )
   end
 
   @doc false
