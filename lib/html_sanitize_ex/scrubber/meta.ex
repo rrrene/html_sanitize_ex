@@ -125,9 +125,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   statement are stripped.
   """
   defmacro strip_everything_not_covered do
-    replacement_linebreak = "#{HtmlSanitizeEx.Parser.replacement_for_linebreak}"
-    replacement_space = "#{HtmlSanitizeEx.Parser.replacement_for_space}"
-    replacement_tab = "#{HtmlSanitizeEx.Parser.replacement_for_tab}"
+    replacement_linebreak = "#{HtmlSanitizeEx.Parser.replacement_for_linebreak()}"
+    replacement_space = "#{HtmlSanitizeEx.Parser.replacement_for_space()}"
+    replacement_tab = "#{HtmlSanitizeEx.Parser.replacement_for_tab()}"
 
     quote do
       # If we haven't covered the attribute until here, we just scrab it.
@@ -147,8 +147,6 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
     end
   end
 
-
-
   defp allow_this_tag_and_scrub_its_attributes(tag_name) do
     quote do
       def scrub({unquote(tag_name), attributes, children}) do
@@ -156,8 +154,8 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       end
 
       defp scrub_attributes(unquote(tag_name), attributes) do
-        Enum.map(attributes, fn(attr) -> scrub_attribute(unquote(tag_name), attr) end)
-        |> Enum.reject(&(is_nil(&1)))
+        Enum.map(attributes, fn attr -> scrub_attribute(unquote(tag_name), attr) end)
+        |> Enum.reject(&is_nil(&1))
       end
     end
   end
@@ -193,20 +191,22 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       @scheme_capture Regex.compile!("(#{@http_like_scheme})|(#{@other_schemes})", "mi")
 
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
-        valid_schema = if uri =~ @protocol_separator_regex do
-          @scheme_capture
-          |> Regex.named_captures(uri)
-          |> case do
-            %{"scheme" => scheme, "other_schemes" => ""} ->
-              scheme in unquote(valid_schemes)
-            %{"other_schemes" => scheme, "scheme" => ""} ->
-              scheme in unquote(valid_schemes)
-            _ ->
-              false
+        valid_schema =
+          if uri =~ @protocol_separator_regex do
+            case Regex.named_captures(@scheme_capture, uri) do
+              %{"scheme" => scheme, "other_schemes" => ""} ->
+                scheme in unquote(valid_schemes)
+
+              %{"other_schemes" => scheme, "scheme" => ""} ->
+                scheme in unquote(valid_schemes)
+
+              _ ->
+                false
+            end
+          else
+            true
           end
-        else
-          true
-        end
+
         if valid_schema, do: {unquote(attr_name), uri}
       end
     end
