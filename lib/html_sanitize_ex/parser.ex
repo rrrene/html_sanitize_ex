@@ -1,10 +1,13 @@
 defmodule HtmlSanitizeEx.Parser do
   @doc """
   Parses a HTML string.
+
   ## Examples
-      iex> Floki.parse("<div class=js-action>hello world</div>")
+
+      iex> HtmlSanitizeEx.Parser.parse("<div class=js-action>hello world</div>")
       {"div", [{"class", "js-action"}], ["hello world"]}
-      iex> Floki.parse("<div>first</div><div>second</div>")
+
+      iex> HtmlSanitizeEx.Parser.parse("<div>first</div><div>second</div>")
       [{"div", [], ["first"]}, {"div", [], ["second"]}]
   """
 
