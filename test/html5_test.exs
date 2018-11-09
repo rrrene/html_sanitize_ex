@@ -20,6 +20,13 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert input == full_html_sanitize(input)
   end
 
+  test "leaves the allowed tags alone 3" do
+    input =
+      ~S(<h1 class="heading" data-confirm="Some confirmation text" style="font-weight: bold">hello world!</h1>)
+
+    assert input == full_html_sanitize(input)
+  end
+
   test "strips everything except the allowed tags" do
     input = "<h1>hello <script>code!</script></h1>"
     expected = "<h1>hello code!</h1>"
