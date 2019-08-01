@@ -594,7 +594,12 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "tabindex",
     "title",
     "translate",
-    "alt crossorigin usemap ismap width height"
+    "alt",
+    "crossorigin",
+    "usemap",
+    "ismap",
+    "width",
+    "height"
   ])
 
   Meta.allow_tag_with_uri_attributes("input", ["src"], @valid_schemes)
