@@ -40,7 +40,7 @@ defmodule HtmlSanitizeEx.Mixfile do
   defp deps do
     [
       {:mochiweb, "~> 2.15"},
-      {:inch_ex, ">= 0.0.0", only: :docs}
+      {:inch_ex, ">= 2.0.0", only: :dev}
     ]
   end
 end
