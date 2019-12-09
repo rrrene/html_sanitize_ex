@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+- Add more missing HTML5 attributes
+- Add "middle" to valid CSS keywords
+
 ## 1.3.0
 
 - Add valid scheme for links: `mailto`
