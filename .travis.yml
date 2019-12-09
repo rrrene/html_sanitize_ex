@@ -15,8 +15,6 @@ script:
   - mix deps.compile
   - mix compile --warnings-as-errors
   - mix test
-after_script:
-  - MIX_ENV=test mix inch.report
 matrix:
   exclude:
   - elixir: 1.5.3
