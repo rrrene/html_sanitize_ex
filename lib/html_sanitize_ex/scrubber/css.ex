@@ -183,6 +183,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
     "lime",
     "maroon",
     "medium",
+    "middle",
     "none",
     "navy",
     "normal",
