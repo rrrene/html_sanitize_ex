@@ -2189,6 +2189,14 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   def scrub_attribute("style", {"type", value}), do: {"type", value}
   def scrub_attribute("style", {"scoped", value}), do: {"scoped", value}
 
+  # allow data tags
+  def scrub_attribute(_tag, {"data-" <> data_tag, value}),
+    do: {"data-" <> data_tag, value}
+
+  # allow aria tags
+  def scrub_attribute(_tag, {"aria-" <> data_tag, value}),
+    do: {"aria-" <> data_tag, value}
+
   defp scrub_css(text) do
     HtmlSanitizeEx.Scrubber.CSS.scrub(text)
   end
