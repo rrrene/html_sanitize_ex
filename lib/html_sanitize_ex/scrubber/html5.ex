@@ -61,6 +61,60 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "type"
   ])
 
+  Meta.allow_tag_with_these_attributes("article", [
+    "accesskey",
+    "autocapitalize",
+    "class",
+    "contenteditable",
+    "contextmenu",
+    "dir",
+    "draggable",
+    "dropzone",
+    "hidden",
+    "id",
+    "inputmode",
+    "is",
+    "itemid",
+    "itemprop",
+    "itemref",
+    "itemscope",
+    "itemtype",
+    "lang",
+    "slot",
+    "spellcheck",
+    "style",
+    "tabindex",
+    "title",
+    "translate"
+  ])
+
+  Meta.allow_tag_with_these_attributes("aside", [
+    "accesskey",
+    "autocapitalize",
+    "class",
+    "contenteditable",
+    "contextmenu",
+    "dir",
+    "draggable",
+    "dropzone",
+    "hidden",
+    "id",
+    "inputmode",
+    "is",
+    "itemid",
+    "itemprop",
+    "itemref",
+    "itemscope",
+    "itemtype",
+    "lang",
+    "slot",
+    "spellcheck",
+    "style",
+    "tabindex",
+    "title",
+    "translate"
+  ])
+
   Meta.allow_tag_with_these_attributes("b", [
     "accesskey",
     "class",
@@ -241,6 +295,33 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "itemtype",
     "lang",
     "spellcheck",
+    "tabindex",
+    "title",
+    "translate"
+  ])
+
+  Meta.allow_tag_with_these_attributes("footer", [
+    "accesskey",
+    "autocapitalize",
+    "class",
+    "contenteditable",
+    "contextmenu",
+    "dir",
+    "draggable",
+    "dropzone",
+    "hidden",
+    "id",
+    "inputmode",
+    "is",
+    "itemid",
+    "itemprop",
+    "itemref",
+    "itemscope",
+    "itemtype",
+    "lang",
+    "slot",
+    "spellcheck",
+    "style",
     "tabindex",
     "title",
     "translate"
