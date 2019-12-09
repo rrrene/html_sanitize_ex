@@ -90,4 +90,11 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     expected = ~s[alert() <p>Hi</p>]
     assert expected == full_html_sanitize(input)
   end
+
+  test "does not strip valid html5 attributes from <img>" do
+    input =
+      ~s[<img src="http://abcd.com" width="100" height="100" translate="(0,0)" />]
+
+    assert input == full_html_sanitize(input)
+  end
 end
