@@ -23,37 +23,57 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   end
 
   test "allows target=_blank inside <a>" do
-    input = ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
-    expected = ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+    input =
+      ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+
+    expected =
+      ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+
     assert expected == sanitize(input)
   end
 
   test "disallows anything else for target= inside <a>" do
-    input = ~S(<a href="test.html" target="asdf" name="testpoint">hello world</a>)
+    input =
+      ~S(<a href="test.html" target="asdf" name="testpoint">hello world</a>)
+
     expected = ~S(<a href="test.html" name="testpoint">hello world</a>)
     assert expected == sanitize(input)
   end
 
   test "allows rel=noopener inside <a>" do
-    input = ~S(<a href="test.html" target="_blank" rel="noopener" name="testpoint">hello world</a>)
-    expected = ~S(<a href="test.html" target="_blank" rel="noopener" name="testpoint">hello world</a>)
+    input =
+      ~S(<a href="test.html" target="_blank" rel="noopener" name="testpoint">hello world</a>)
+
+    expected =
+      ~S(<a href="test.html" target="_blank" rel="noopener" name="testpoint">hello world</a>)
+
     assert expected == sanitize(input)
   end
 
   test "allows rel=noreferrer inside <a>" do
-    input = ~S(<a href="test.html" target="_blank" rel="noreferrer" name="testpoint">hello world</a>)
-    expected = ~S(<a href="test.html" target="_blank" rel="noreferrer" name="testpoint">hello world</a>)
+    input =
+      ~S(<a href="test.html" target="_blank" rel="noreferrer" name="testpoint">hello world</a>)
+
+    expected =
+      ~S(<a href="test.html" target="_blank" rel="noreferrer" name="testpoint">hello world</a>)
+
     assert expected == sanitize(input)
   end
 
   test "disallows anything else for rel= inside <a>" do
-    input = ~S(<a href="test.html" target="_blank" rel="asdf" name="testpoint">hello world</a>)
-    expected = ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+    input =
+      ~S(<a href="test.html" target="_blank" rel="asdf" name="testpoint">hello world</a>)
+
+    expected =
+      ~S(<a href="test.html" target="_blank" name="testpoint">hello world</a>)
+
     assert expected == sanitize(input)
   end
 
   test "strips everything except the allowed tags (for multiple tags)" do
-    input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+    input =
+      "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+
     expected = "code!<p>hello code!</p>"
     assert expected == sanitize(input)
   end
@@ -82,8 +102,12 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   end
 
   test "strips certain tags in multi line strings" do
-    input = "<title>This is <b>a <a href=\"\" target=\"_top\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
-    expected = "This is <b>a <a href=\"\">test</a></b>.\n\n\n\n<p>It no <b>longer <strong>contains <em>any HTML</em>.</strong></b></p>\n"
+    input =
+      "<title>This is <b>a <a href=\"\" target=\"_top\">test</a></b>.</title>\n\n<!-- it has a comment -->\n\n<p>It no <b>longer <strong>contains <em>any <strike>HTML</strike></em>.</strong></b></p>\n"
+
+    expected =
+      "This is <b>a <a href=\"\">test</a></b>.\n\n\n\n<p>It no <b>longer <strong>contains <em>any HTML</em>.</strong></b></p>\n"
+
     assert expected == sanitize(input)
   end
 
@@ -134,18 +158,26 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   @tag href_scrubbing: true
   test "test_strip_links_with_line_feed_and_uppercase_tag" do
     input = "<a href='almost'>on my mind</a> <A href='almost'>all day long</A>"
-    assert "<a href=\"almost\">on my mind</a> <a href=\"almost\">all day long</a>" == sanitize(input)
+
+    assert "<a href=\"almost\">on my mind</a> <a href=\"almost\">all day long</a>" ==
+             sanitize(input)
   end
 
   @tag href_scrubbing: true
   test "test_strip_links_leaves_nonlink_tags" do
-    assert "<a href=\"almost\">My mind</a>\n<a href=\"almost\">all <b>day</b> long</a>" == sanitize("<a href='almost'>My mind</a>\n<A href='almost'>all <b>day</b> long</A>")
+    assert "<a href=\"almost\">My mind</a>\n<a href=\"almost\">all <b>day</b> long</a>" ==
+             sanitize(
+               "<a href='almost'>My mind</a>\n<A href='almost'>all <b>day</b> long</A>"
+             )
   end
 
   @tag href_scrubbing: true
   test "strips tags with sanitize/1" do
-    input = "<p>This <u>is</u> a <a href='test.html'><strong>test</strong></a>.</p>"
-    assert "<p>This <u>is</u> a <a href=\"test.html\"><strong>test</strong></a>.</p>" == sanitize(input)
+    input =
+      "<p>This <u>is</u> a <a href='test.html'><strong>test</strong></a>.</p>"
+
+    assert "<p>This <u>is</u> a <a href=\"test.html\"><strong>test</strong></a>.</p>" ==
+             sanitize(input)
   end
 
   @a_href_hacks [
@@ -180,22 +212,31 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   @tag href_scrubbing: true
   test "strips malicious protocol hacks from a href attribute" do
     expected = "<a>text here</a>"
-    Enum.each(@a_href_hacks, fn(x) -> assert expected == sanitize(x) end)
+    Enum.each(@a_href_hacks, fn x -> assert expected == sanitize(x) end)
   end
 
   @tag href_scrubbing: true
   test "does not strip x03a legitimate" do
-    assert "<a href=\"http://legit\"></a>" == sanitize("<a href=\"http&#x3a;//legit\">")
-    assert "<a href=\"http://legit\"></a>" == sanitize("<a href=\"http&#x3A;//legit\">")
+    assert "<a href=\"http://legit\"></a>" ==
+             sanitize("<a href=\"http&#x3a;//legit\">")
+
+    assert "<a href=\"http://legit\"></a>" ==
+             sanitize("<a href=\"http&#x3A;//legit\">")
   end
 
   test "test_strip links with links" do
-    input = "<a href='http://www.elixirstatus.com/'><a href='http://www.elixirstatus.com/' onlclick='steal()'>0wn3d</a></a>"
-    assert "<a href=\"http://www.elixirstatus.com/\"><a href=\"http://www.elixirstatus.com/\">0wn3d</a></a>" == sanitize(input)
+    input =
+      "<a href='http://www.elixirstatus.com/'><a href='http://www.elixirstatus.com/' onlclick='steal()'>0wn3d</a></a>"
+
+    assert "<a href=\"http://www.elixirstatus.com/\"><a href=\"http://www.elixirstatus.com/\">0wn3d</a></a>" ==
+             sanitize(input)
   end
 
   test "test_strip_links_with_linkception" do
-    assert "<a href=\"http://www.elixirstatus.com/\">Mag<a href=\"http://www.elixir-lang.org/\">ic</a></a>" == sanitize("<a href='http://www.elixirstatus.com/'>Mag<a href='http://www.elixir-lang.org/'>ic")
+    assert "<a href=\"http://www.elixirstatus.com/\">Mag<a href=\"http://www.elixir-lang.org/\">ic</a></a>" ==
+             sanitize(
+               "<a href='http://www.elixirstatus.com/'>Mag<a href='http://www.elixir-lang.org/'>ic"
+             )
   end
 
   test "test_strip_links_with_a_tag_in_href" do
@@ -209,42 +250,65 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   end
 
   test "strips not allowed attributes" do
-    input = "start <a title=\"1\" onclick=\"foo\">foo <bad>bar</bad> baz</a> end"
+    input =
+      "start <a title=\"1\" onclick=\"foo\">foo <bad>bar</bad> baz</a> end"
+
     expected = "start <a title=\"1\">foo bar baz</a> end"
     assert expected == sanitize(input)
   end
 
   test "sanitize_script" do
-    assert "a b cblah blah blahd e f" == sanitize("a b c<script language=\"Javascript\">blah blah blah</script>d e f")
+    assert "a b cblah blah blahd e f" ==
+             sanitize(
+               "a b c<script language=\"Javascript\">blah blah blah</script>d e f"
+             )
   end
 
   @tag href_scrubbing: true
   test "sanitize_js_handlers" do
-    input = ~s(onthis="do that" <a href="#" onclick="hello" name="foo" onbogus="remove me">hello</a>)
-    assert "onthis=\"do that\" <a href=\"#\" name=\"foo\">hello</a>" == sanitize(input)
+    input =
+      ~s(onthis="do that" <a href="#" onclick="hello" name="foo" onbogus="remove me">hello</a>)
+
+    assert "onthis=\"do that\" <a href=\"#\" name=\"foo\">hello</a>" ==
+             sanitize(input)
   end
 
   test "sanitize_javascript_href" do
-    raw = ~s(href="javascript:bang" <a href="javascript:bang" name="hello">foo</a>, <span href="javascript:bang">bar</span>)
-    assert ~s(href="javascript:bang" <a name="hello">foo</a>, <span>bar</span>) == sanitize(raw)
+    raw =
+      ~s(href="javascript:bang" <a href="javascript:bang" name="hello">foo</a>, <span href="javascript:bang">bar</span>)
+
+    assert ~s(href="javascript:bang" <a name="hello">foo</a>, <span>bar</span>) ==
+             sanitize(raw)
   end
 
   test "sanitize_image_src" do
-    raw = ~s(src="javascript:bang" <img src="javascript:bang" width="5">foo</img>, <span src="javascript:bang">bar</span>)
-    assert "src=\"javascript:bang\" <img width=\"5\" />, <span>bar</span>" == sanitize(raw)
+    raw =
+      ~s(src="javascript:bang" <img src="javascript:bang" width="5">foo</img>, <span src="javascript:bang">bar</span>)
+
+    assert "src=\"javascript:bang\" <img width=\"5\" />, <span>bar</span>" ==
+             sanitize(raw)
   end
 
   @tag href_scrubbing: true
   test "should only allow http/https protocols" do
-    assert "<a href=\"foo\">baz</a>" == sanitize(~s(<a href="foo" onclick="bar"><script>baz</script></a>))
-    assert "<a href=\"http://example.com\">baz</a>" == sanitize(~s(<a href="http://example.com" onclick="bar"><script>baz</script></a>))
-    assert "<a href=\"https://example.com\">baz</a>" == sanitize(~s(<a href="https://example.com" onclick="bar"><script>baz</script></a>))
+    assert "<a href=\"foo\">baz</a>" ==
+             sanitize(~s(<a href="foo" onclick="bar"><script>baz</script></a>))
+
+    assert "<a href=\"http://example.com\">baz</a>" ==
+             sanitize(
+               ~s(<a href="http://example.com" onclick="bar"><script>baz</script></a>)
+             )
+
+    assert "<a href=\"https://example.com\">baz</a>" ==
+             sanitize(
+               ~s(<a href="https://example.com" onclick="bar"><script>baz</script></a>)
+             )
   end
 
-  #test "video_poster_sanitization" do
+  # test "video_poster_sanitization" do
   #  assert ~s(<video src="videofile.ogg" autoplay  poster="posterimage.jpg"></video>) == ~s(<video src="videofile.ogg" poster="posterimage.jpg"></video>)
   #  assert ~s(<video src="videofile.ogg"></video>) == sanitize("<video src=\"videofile.ogg\" poster=javascript:alert(1)></video>")
-  #end
+  # end
 
   test "strips not allowed tags " do
     input = "<form><u></u></form>"
@@ -273,11 +337,12 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
     "<IMG SRC=\"jav&#x0D;ascript:alert('XSS');\">",
     "<IMG SRC=\" &#14;  javascript:alert('XSS');\">",
     "<IMG SRC=\"javascript&#x3a;alert('XSS');\">",
-    "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>"]
+    "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>"
+  ]
 
   test "strips malicious protocol hacks from img src attribute" do
     expected = "<img />"
-    Enum.each(@image_src_hacks, fn(x) -> assert expected == sanitize(x) end)
+    Enum.each(@image_src_hacks, fn x -> assert expected == sanitize(x) end)
   end
 
   test "strips script tag" do
@@ -291,7 +356,6 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
     expected = "<img />alert(\"XSS\")\"&gt;"
     assert expected == sanitize(input)
   end
-
 
   test "should_sanitize_tag_broken_up_by_null" do
     assert "alert(\"XSS\")" == sanitize("<SCR\0IPT>alert(\"XSS\")</SCR\0IPT>")
@@ -316,11 +380,14 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
     img_hack = """
     <IMG\nSRC\n=\n"\nj\na\nv\na\ns\nc\nr\ni\np\nt\n:\na\nl\ne\nr\nt\n(\n'\nX\nS\nS\n'\n)\n"\n>)
     """
+
     assert "<img />)\n" == sanitize(img_hack)
   end
 
   test "should_sanitize_within attributes" do
-    input = "<span title=\"&#39;&gt;&lt;script&gt;alert()&lt;/script&gt;\">blah</span>"
+    input =
+      "<span title=\"&#39;&gt;&lt;script&gt;alert()&lt;/script&gt;\">blah</span>"
+
     assert "<span>blah</span>" == sanitize(input)
   end
 
@@ -328,7 +395,10 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   end
 
   test "should_sanitize_non_alpha_and_non_digit_characters_in_tags" do
-    assert "<a></a>foo" == sanitize("<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>")
+    assert "<a></a>foo" ==
+             sanitize(
+               "<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>"
+             )
   end
 
   test "should_sanitize_invalid_tag_names_in_single_tags" do
@@ -336,7 +406,8 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   end
 
   test "should_sanitize_img_dynsrc_lowsrc" do
-    assert "<img />" == sanitize("<img lowsrc=\"javascript:alert('XSS')\" />")  end
+    assert "<img />" == sanitize("<img lowsrc=\"javascript:alert('XSS')\" />")
+  end
 
   test "should_sanitize_img_vbscript" do
     assert "<img />" == sanitize("<img src='vbscript:msgbox(\"XSS\")' />")
@@ -344,7 +415,8 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
 
   @tag cdata: true
   test "should_sanitize_cdata_section" do
-    assert "<span>section</span>]]&gt;" == sanitize("<![CDATA[<span>section</span>]]>")
+    assert "<span>section</span>]]&gt;" ==
+             sanitize("<![CDATA[<span>section</span>]]>")
   end
 
   @tag cdata: true
@@ -354,7 +426,8 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
 
   @tag cdata: true
   test "should_sanitize_unterminated_cdata_section" do
-    assert "<span>neverending...</span>" == sanitize("<![CDATA[<span>neverending...")
+    assert "<span>neverending...</span>" ==
+             sanitize("<![CDATA[<span>neverending...")
   end
 
   @tag cdata: true
@@ -373,11 +446,11 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
     assert "<span></span>" == sanitize("<span class=\"\\")
   end
 
-  #test "this affects only NS4, but we're on a roll, right?" do
+  # test "this affects only NS4, but we're on a roll, right?" do
   #  input = "<div size=\"&{alert('XSS')}\">foo</div>"
   #  expected = "<div>foo</div>"
   #  assert expected == sanitize(input)
-  #end
+  # end
 
   test "does not strip the mailto URI scheme" do
     input = ~s(<a href="mailto:someone@yoursite.com">Email Us</a>)

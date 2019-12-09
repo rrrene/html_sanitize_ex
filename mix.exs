@@ -4,7 +4,7 @@ defmodule HtmlSanitizeEx.Mixfile do
   def project do
     [
       app: :html_sanitize_ex,
-      version: "1.3.0-rc3",
+      version: "1.3.0",
       elixir: "~> 1.0",
       description: "HTML sanitizer for Elixir",
       source_url: "https://github.com/rrrene/html_sanitize_ex",
@@ -12,11 +12,11 @@ defmodule HtmlSanitizeEx.Mixfile do
         maintainers: ["René Föhring"],
         licenses: ["MIT"],
         links: %{
-         "GitHub" => "https://github.com/rrrene/html_sanitize_ex",
+          "GitHub" => "https://github.com/rrrene/html_sanitize_ex"
         }
       ],
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
@@ -39,8 +39,7 @@ defmodule HtmlSanitizeEx.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:mochiweb, "~> 2.15"},
-      {:inch_ex, ">= 0.0.0", only: :docs}
+      {:mochiweb, "~> 2.15"}
     ]
   end
 end

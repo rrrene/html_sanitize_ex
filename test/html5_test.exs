@@ -20,6 +20,13 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert input == full_html_sanitize(input)
   end
 
+  test "leaves the allowed tags alone 3" do
+    input =
+      ~S(<h1 class="heading" data-confirm="Some confirmation text" style="font-weight: bold">hello world!</h1>)
+
+    assert input == full_html_sanitize(input)
+  end
+
   test "strips everything except the allowed tags" do
     input = "<h1>hello <script>code!</script></h1>"
     expected = "<h1>hello code!</h1>"
@@ -32,26 +39,38 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
   end
 
   test "handles bad css" do
-    input = "<style> \@import url(javascript:alert('Your cookie:'+document.cookie)); </style>"
+    input =
+      "<style> \@import url(javascript:alert('Your cookie:'+document.cookie)); </style>"
+
     expected = "<style> @import url(:'+document.cookie)); </style>"
     assert expected == full_html_sanitize(input)
   end
 
   test "handles bad css in style attribute" do
-    input = "<h1 style=\"color: red; background-image: url('javascript:alert');  border: 1px solid brown;\">hello code!</h1>"
-    expected = "<h1 style=\"color: red; :alert');  border: 1px solid brown;\">hello code!</h1>"
+    input =
+      "<h1 style=\"color: red; background-image: url('javascript:alert');  border: 1px solid brown;\">hello code!</h1>"
+
+    expected =
+      "<h1 style=\"color: red; :alert');  border: 1px solid brown;\">hello code!</h1>"
+
     assert expected == full_html_sanitize(input)
   end
 
   test "strips everything except the allowed tags (for multiple tags)" do
-    input = "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+    input =
+      "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+
     expected = "<section><header>code!</header><p>hello code!</p></section>"
     assert expected == full_html_sanitize(input)
   end
 
   test "does not strip caption from tables" do
-    input = "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
-    expected = "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+    input =
+      "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+
+    expected =
+      "<table><caption>This is a table</caption><thead></thead><tbody></tbody></table>"
+
     assert expected == full_html_sanitize(input)
   end
 
@@ -77,5 +96,12 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     input = ~s[<script>alert()</script> <p>Hi</p>]
     expected = ~s[alert() <p>Hi</p>]
     assert expected == full_html_sanitize(input)
+  end
+
+  test "does not strip valid html5 attributes from <img>" do
+    input =
+      ~s[<img src="http://abcd.com" width="100" height="100" translate="(0,0)" />]
+
+    assert input == full_html_sanitize(input)
   end
 end
