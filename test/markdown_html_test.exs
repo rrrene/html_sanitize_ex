@@ -457,4 +457,13 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
     expected = ~s(<a href="mailto:someone@yoursite.com">Email Us</a>)
     assert expected == sanitize(input)
   end
+
+  test "allows all header tags" do
+    input =
+      1..6
+      |> Stream.map(&"<h#{&1}>Header #{&1}</h#{&1}>")
+      |> Enum.join()
+
+    assert input == sanitize(input)
+  end
 end
