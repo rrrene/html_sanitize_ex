@@ -30,6 +30,7 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   Meta.allow_tag_with_these_attributes("h3", [])
   Meta.allow_tag_with_these_attributes("h4", [])
   Meta.allow_tag_with_these_attributes("h5", [])
+  Meta.allow_tag_with_these_attributes("h6", [])
   Meta.allow_tag_with_these_attributes("hr", [])
   Meta.allow_tag_with_these_attributes("i", [])
 

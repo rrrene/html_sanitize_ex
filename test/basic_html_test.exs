@@ -438,4 +438,17 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
     expected = ~s(<a href="mailto:someone@yoursite.com">Email Us</a>)
     assert expected == basic_html_sanitize(input)
   end
+
+  test "does not strip any header tags" do
+    input = """
+    <h1>Header 1</h1>
+    <h2>Header 2</h2>
+    <h3>Header 3</h3>
+    <h4>Header 4</h4>
+    <h5>Header 5</h5>
+    <h6>Header 6</h6>
+    """
+
+    assert input == basic_html_sanitize(input)
+  end
 end
