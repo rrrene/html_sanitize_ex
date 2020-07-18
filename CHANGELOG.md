@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1
+
+- Add missing `<h6>` tag to `BasicHTML` and `MarkdownHTML` scrubbers
+
 ## 1.4.0
 
 - Add more missing HTML5 attributes
