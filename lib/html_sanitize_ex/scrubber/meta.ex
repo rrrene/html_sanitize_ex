@@ -207,10 +207,12 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
                         "mi"
                       )
 
+      @max_scheme_length 20
+
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
         valid_schema =
           if uri =~ @protocol_separator_regex do
-            case Regex.named_captures(@scheme_capture, uri) do
+            case Regex.named_captures(@scheme_capture, uri |> String.slice(0..@max_scheme_length)) do
               %{"scheme" => scheme, "other_schemes" => ""} ->
                 scheme in unquote(valid_schemes)
 
