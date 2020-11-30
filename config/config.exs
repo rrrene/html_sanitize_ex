@@ -22,3 +22,49 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+# config :html_sanitize_ex, :html_sanitize_ex,
+#   list_of_tags_with_these_attributes: [
+#     ["a", ["name", "title"]],
+#     ["b", []],
+#     ["blockquote", []],
+#     ["br", []],
+#     ["code", []],
+#     ["del", []],
+#     ["em", []],
+#     ["h1", []],
+#     ["h2", []],
+#     ["h3", []],
+#     ["h4", []],
+#     ["h5", []],
+#     ["h6", []],
+#     ["hr", []],
+#     ["i", []],
+#     [
+#       "img",
+#       [
+#         "width",
+#         "height",
+#         "title",
+#         "alt"
+#       ]
+#     ],
+#     ["li", []],
+#     ["ol", []],
+#     ["p", []],
+#     ["pre", []],
+#     ["span", []],
+#     ["strong", []],
+#     ["table", []],
+#     ["tbody", []],
+#     ["td", []],
+#     ["th", []],
+#     ["thead", []],
+#     ["tr", []],
+#     ["u", []],
+#     ["ul", []]
+#   ],
+#   list_of_tags_with_uri_attributes: [
+#     ["a", ["href"], ["http", "https", "mailto"]],
+#     ["img", ["src"], ["http", "https", "mailto"]]
+#   ]

@@ -20,4 +20,8 @@ defmodule HtmlSanitizeEx do
   def strip_tags(html) do
     html |> Scrubber.scrub(Scrubber.StripTags)
   end
+
+  def custom_config(html) do
+    html |> Scrubber.scrub(Scrubber.CustomConfig)
+  end
 end
