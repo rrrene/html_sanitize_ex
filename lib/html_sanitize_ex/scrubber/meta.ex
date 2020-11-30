@@ -68,6 +68,19 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
     |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
   end
 
+  defmacro allow_list_of_tags_with_these_attributes(
+             list_of_tags_with_these_attributes
+           ) do
+    list_of_tags_with_these_attributes
+    |> Enum.each(fn {tag_name, list} ->
+      list
+      |> Enum.map(fn attr_name ->
+        allow_this_tag_with_this_attribute(tag_name, attr_name)
+      end)
+      |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
+    end)
+  end
+
   @doc """
   Allow the given list of +values+ for the given +attribute+ on the
   specified +tag+.
@@ -97,6 +110,18 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
     list
     |> Enum.map(fn name ->
       allow_tag_with_uri_attribute(tag, name, valid_schemes)
+    end)
+  end
+
+  defmacro allow_list_of_tags_with_uri_attributes(
+             list_of_tags_with_uri_attributes
+           ) do
+    list_of_tags_with_uri_attributes
+    |> Enum.each(fn {tag, list, valid_schemes} ->
+      list
+      |> Enum.map(fn name ->
+        allow_tag_with_uri_attribute(tag, name, valid_schemes)
+      end)
     end)
   end
 
