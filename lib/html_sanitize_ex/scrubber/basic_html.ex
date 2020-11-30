@@ -16,12 +16,13 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
 
   Meta.strip_comments()
 
-  Meta.allow_tag_with_uri_attributes("a", ["href"], @valid_schemes)
-  Meta.allow_tag_with_these_attributes("a", ["name", "title"])
+  Meta.allow_list_of_tags_with_uri_attributes([["a", ["href"], @valid_schemes]])
+  Meta.allow_list_of_tags_with_these_attributes([["a", ["name", "title"]], ["b", []], ["blockquote", []], ["br", []]])
+  # Meta.allow_tag_with_these_attributes("a", ["name", "title"])
 
-  Meta.allow_tag_with_these_attributes("b", [])
-  Meta.allow_tag_with_these_attributes("blockquote", [])
-  Meta.allow_tag_with_these_attributes("br", [])
+  # Meta.allow_tag_with_these_attributes("b", [])
+  # Meta.allow_tag_with_these_attributes("blockquote", [])
+  # Meta.allow_tag_with_these_attributes("br", [])
   Meta.allow_tag_with_these_attributes("code", [])
   Meta.allow_tag_with_these_attributes("del", [])
   Meta.allow_tag_with_these_attributes("em", [])
