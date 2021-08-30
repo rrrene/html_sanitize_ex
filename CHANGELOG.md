@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.2
+
+- Fix regression when parsing schemes from URIs
+- Fix compiler warnings
+- Add missing `<body>` tag to `HTML5` scrubber
+
 ## 1.4.1
 
 - Add missing `<h6>` tag to `BasicHTML` and `MarkdownHTML` scrubbers
