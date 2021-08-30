@@ -162,6 +162,30 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "translate"
   ])
 
+  Meta.allow_tag_with_these_attributes("body", [
+    "accesskey",
+    "class",
+    "contenteditable",
+    "contextmenu",
+    "dir",
+    "draggable",
+    "dropzone",
+    "hidden",
+    "id",
+    "inert",
+    "itemid",
+    "itemprop",
+    "itemref",
+    "itemscope",
+    "itemtype",
+    "lang",
+    "role",
+    "spellcheck",
+    "tabindex",
+    "title",
+    "translate"
+  ])
+
   Meta.allow_tag_with_these_attributes("br", [
     "accesskey",
     "class",
