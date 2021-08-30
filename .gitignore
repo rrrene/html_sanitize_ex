@@ -2,6 +2,7 @@
 /_build
 /deps
 /docs/all.json
+/doc
 test.json
 erl_crash.dump
 *.ez
