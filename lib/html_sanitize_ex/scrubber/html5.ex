@@ -705,7 +705,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "ismap",
     "width",
     "height",
-    "size"
+    "sizes"
   ])
 
   Meta.allow_tag_with_uri_attributes("input", ["src"], @valid_schemes)
