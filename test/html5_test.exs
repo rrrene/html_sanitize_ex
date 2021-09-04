@@ -105,6 +105,13 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert input == full_html_sanitize(input)
   end
 
+  test "does not strip valid html5 attributes srcset and sizes from <img>" do
+    input =
+      ~s[<img src="http://abcd.com" srcset="elva-fairy-480w.jpg 480w, elva-fairy-800w.jpg 800w" sizes="(max-width: 600px) 480px, 800px" />]
+
+    assert input == full_html_sanitize(input)
+  end
+
   test "does not strip any header tags" do
     input = """
     <h1>Header 1</h1>
