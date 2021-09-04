@@ -69,6 +69,23 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   end
 
   @doc """
+  Allow any attributes for the specified +tag+.
+
+      Meta.allow_tag_with_any_attributes "a"
+
+      Meta.allow_tag_with_any_attributes "img"
+  """
+  defmacro allow_tag_with_any_attributes(tag_name) do
+    quote do
+      def scrub_attribute(unquote(tag_name), {attr_name, value}) do
+        {attr_name, value}
+      end
+
+      unquote(allow_this_tag_and_scrub_its_attributes(tag_name))
+    end
+  end
+
+  @doc """
   Allow the given list of +values+ for the given +attribute+ on the
   specified +tag+.
 
@@ -212,7 +229,10 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
         valid_schema =
           if uri =~ @protocol_separator_regex do
-            case Regex.named_captures(@scheme_capture, uri |> String.slice(0..@max_scheme_length)) do
+            case Regex.named_captures(
+                   @scheme_capture,
+                   uri |> String.slice(0..@max_scheme_length)
+                 ) do
               %{"scheme" => scheme, "other_schemes" => ""} ->
                 scheme in unquote(valid_schemes)
 
