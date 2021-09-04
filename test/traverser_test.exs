@@ -11,7 +11,7 @@ defmodule StripEverythingButB do
 end
 
 defmodule HtmlSanitizeExTraverserTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   def parse_to_tree(html) do
     html

@@ -1,5 +1,5 @@
 defmodule HtmlSanitizeExScrubberStripTagsTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   defp strip_tags(text) do
     HtmlSanitizeEx.strip_tags(text)

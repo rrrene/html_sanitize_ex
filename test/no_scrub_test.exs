@@ -1,5 +1,5 @@
 defmodule HtmlSanitizeExScrubberNoScrubTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   defp no_scrub_sanitize(text) do
     HtmlSanitizeEx.noscrub(text)

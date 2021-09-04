@@ -1,5 +1,5 @@
 defmodule HtmlSanitizeExTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   test "strips all the tags" do
     input =

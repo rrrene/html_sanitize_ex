@@ -1,5 +1,5 @@
 defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   defp sanitize(text) do
     text |> HtmlSanitizeEx.Scrubber.scrub(HtmlSanitizeEx.Scrubber.MarkdownHTML)

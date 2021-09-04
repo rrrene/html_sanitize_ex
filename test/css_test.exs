@@ -1,5 +1,5 @@
 defmodule HtmlSanitizeExScrubberCSSTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   def scrub_css(text) do
     HtmlSanitizeEx.Scrubber.CSS.scrub(text)
