@@ -27,12 +27,6 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
     text
   end
 
-  @doc false
-  def scrub_attributes(tag, attributes) do
-    Enum.map(attributes, fn attr -> scrub_attribute(tag, attr) end)
-    |> Enum.reject(&is_nil(&1))
-  end
-
   @doc """
   Scrubs a single attribute for a given tag.
 
@@ -52,5 +46,12 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
   """
   def scrub_attribute(_tag, attribute) do
     attribute
+  end
+
+  @doc false
+  def scrub_attributes(tag, attributes) do
+    attributes
+    |> Enum.map(fn attr -> scrub_attribute(tag, attr) end)
+    |> Enum.reject(&is_nil(&1))
   end
 end

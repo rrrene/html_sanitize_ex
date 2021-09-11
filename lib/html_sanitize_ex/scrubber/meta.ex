@@ -130,7 +130,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   """
   defmacro remove_cdata_sections_before_scrub do
     quote do
-      def before_scrub(html), do: String.replace(html, "<![CDATA[", "")
+      def before_scrub("" <> html), do: String.replace(html, "<![CDATA[", "")
     end
   end
 
@@ -156,7 +156,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
     quote do
       # If we haven't covered the attribute until here, we just scrab it.
-      def scrub_attribute(_tag, _attribute), do: nil
+      def scrub_attribute("" <> _tag, _attribute), do: nil
 
       # If we haven't covered the attribute until here, we just scrab it.
       def scrub({_tag, _attributes, children}), do: children
@@ -217,7 +217,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       @protocol_separator_regex Regex.compile!(@protocol_separator, "mi")
 
       @http_like_scheme "(?<scheme>.+?)(#{@protocol_separator})//"
-      @other_schemes "(?<other_schemes>mailto)(#{@protocol_separator})"
+      @other_schemes "(?<other_schemes>.+)(#{@protocol_separator})"
 
       @scheme_capture Regex.compile!(
                         "(#{@http_like_scheme})|(#{@other_schemes})",
@@ -226,28 +226,55 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
       @max_scheme_length 20
 
+      Module.register_attribute(
+        __MODULE__,
+        :scrub_attribute,
+        accumulate: true
+      )
+
+      @scrub_attribute {unquote(tag_name),
+                        {unquote(attr_name), unquote(valid_schemes)}}
+
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
         valid_schema =
           if uri =~ @protocol_separator_regex do
+            valid_schemes =
+              @scrub_attribute
+              |> IO.inspect()
+              |> Enum.filter(fn {tag, list} ->
+                tag == unquote(tag_name)
+              end)
+              |> Enum.map(&elem(&1, 1))
+              |> List.flatten()
+              |> Enum.filter(fn {attr, list} ->
+                attr == unquote(attr_name)
+              end)
+              |> Enum.map(&elem(&1, 1))
+              |> List.flatten()
+              |> IO.inspect()
+
             case Regex.named_captures(
                    @scheme_capture,
-                   uri |> String.slice(0..@max_scheme_length)
+                   String.slice(uri, 0..@max_scheme_length)
                  ) do
               %{"scheme" => scheme, "other_schemes" => ""} ->
-                scheme in unquote(valid_schemes)
+                scheme in valid_schemes
 
               %{"other_schemes" => scheme, "scheme" => ""} ->
-                scheme in unquote(valid_schemes)
+                scheme in valid_schemes
 
-              _ ->
+              value ->
                 false
             end
           else
             true
           end
 
-        if valid_schema, do: {unquote(attr_name), uri}
+        if valid_schema do
+          {unquote(attr_name), uri}
+        end
       end
     end
+    |> tap(fn q -> IO.puts(Code.format_string!(Macro.to_string(q))) end)
   end
 end

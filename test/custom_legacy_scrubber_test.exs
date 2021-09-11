@@ -1,16 +1,17 @@
-defmodule CustomScrubberTest do
+defmodule CustomLegacyScrubberTest do
   use ExUnit.Case, async: true
 
   defmodule Custom do
-    use HtmlSanitizeEx.Scrubber
+    require HtmlSanitizeEx.Scrubber.Meta
+    alias HtmlSanitizeEx.Scrubber.Meta
 
-    remove_cdata_sections_before_scrub()
+    Meta.remove_cdata_sections_before_scrub()
 
-    strip_comments()
+    Meta.strip_comments()
 
-    allow_tag_with_any_attributes("p")
+    Meta.allow_tag_with_any_attributes("p")
 
-    strip_everything_not_covered()
+    Meta.strip_everything_not_covered()
   end
 
   defp scrub(text) do

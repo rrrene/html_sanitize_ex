@@ -1,0 +1,2 @@
+defmodule HtmlSanitizeEx.ScrubberCompiler do
+end
