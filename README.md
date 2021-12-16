@@ -78,6 +78,10 @@ Here is an example of a custom scrubber which allows only `p`, `h1`, and
 [URI schemes](https://en.wikipedia.org/wiki/List_of_URI_schemes). It also
 removes CDATA sections and comments.
 
+Note that the scrubber should include `Meta.strip_everything_not_covered()` at
+the end.
+
+
 ```elixir
 defmodule MyProject.MyScrubber do
   require HtmlSanitizeEx.Scrubber.Meta
@@ -89,6 +93,8 @@ defmodule MyProject.MyScrubber do
   Meta.allow_tag_with_these_attributes("p", [])
   Meta.allow_tag_with_these_attributes("h1", [])
   Meta.allow_tag_with_uri_attributes("a", ["href"], ["https", "mailto"])
+
+  Meta.strip_everything_not_covered()
 end
 ```
 
