@@ -110,11 +110,19 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       # Only allow none-SSL images
       Meta.allow_tag_with_uri_attributes "img", ["src"], ["http"]
   """
-  defmacro allow_tag_with_uri_attributes(tag, list, valid_schemes) do
-    list
-    |> Enum.map(fn name ->
-      allow_tag_with_uri_attribute(tag, name, valid_schemes)
-    end)
+  defmacro allow_tag_with_uri_attributes(tag_name, list, valid_schemes) do
+    quotes =
+      list
+      |> Enum.map(fn name ->
+        allow_tag_with_uri_attribute(tag_name, name, valid_schemes)
+      end)
+
+    # |> tap(fn q ->
+    #   IO.puts("### allow_tag_with_uri_attributes ###\n")
+    #   IO.puts(Code.format_string!(Macro.to_string(q)))
+    # end)
+
+    [allow_this_tag_and_scrub_its_attributes(tag_name)] ++ quotes
   end
 
   @doc """
@@ -159,9 +167,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       def scrub_attribute("" <> _tag, _attribute), do: nil
 
       # If we haven't covered the attribute until here, we just scrab it.
-      def scrub({_tag, _attributes, children}), do: children
+      def scrub({"" <> _tag, _attributes, children}), do: children
 
-      def scrub({_tag, children}), do: children
+      def scrub({"" <> _tag, children}), do: children
 
       def scrub(unquote(" " <> replacement_linebreak <> " ") <> text), do: text
 
@@ -177,17 +185,13 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   defp allow_this_tag_and_scrub_its_attributes(tag_name) do
     quote do
-      def scrub({unquote(tag_name), attributes, children}) do
-        {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes),
-         children}
-      end
+      Module.register_attribute(
+        __MODULE__,
+        :allowed_tag_names,
+        accumulate: true
+      )
 
-      defp scrub_attributes(unquote(tag_name), attributes) do
-        Enum.map(attributes, fn attr ->
-          scrub_attribute(unquote(tag_name), attr)
-        end)
-        |> Enum.reject(&is_nil(&1))
-      end
+      @allowed_tag_names unquote(tag_name)
     end
   end
 
@@ -236,11 +240,15 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
                         {unquote(attr_name), unquote(valid_schemes)}}
 
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
+        IO.inspect(
+          {__MODULE__, :scrub_attribute, unquote(tag_name),
+           {unquote(attr_name), uri}}
+        )
+
         valid_schema =
           if uri =~ @protocol_separator_regex do
             valid_schemes =
               @scrub_attribute
-              |> IO.inspect()
               |> Enum.filter(fn {tag, list} ->
                 tag == unquote(tag_name)
               end)
@@ -251,7 +259,6 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
               end)
               |> Enum.map(&elem(&1, 1))
               |> List.flatten()
-              |> IO.inspect()
 
             case Regex.named_captures(
                    @scheme_capture,
@@ -275,6 +282,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
         end
       end
     end
-    |> tap(fn q -> IO.puts(Code.format_string!(Macro.to_string(q))) end)
+
+    # |> tap(fn q -> IO.puts(Code.format_string!(Macro.to_string(q))) end)
   end
 end

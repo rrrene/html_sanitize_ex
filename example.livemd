@@ -1,0 +1,34 @@
+# Untitled notebook
+
+## Section
+
+```elixir
+Mix.install([{:html_sanitize_ex, path: "/data"}], force: true)
+```
+
+Let's create a scrubber which does everything `HtmlSanitizeEx.markdown_html /1` does.
+
+```elixir
+defmodule MyScrubber do
+  use HtmlSanitizeEx.Scrubber
+
+  extend :markdown_html do
+    allow_tag_with_any_attributes("p")
+
+    allow_tag_with_uri_attributes("img", ["src"], ["data"])
+  end
+end
+
+~S"""
+<section>
+  <img src="data:test" />
+  <header>
+    <script>alert("code!");</script>
+    <img src="test.jpg" />
+  </header>
+  <p class="allowed">hello <script>code!</script></p>
+</section>
+"""
+|> HtmlSanitizeEx.Scrubber.scrub(MyScrubber)
+|> IO.puts()
+```

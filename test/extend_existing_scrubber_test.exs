@@ -8,13 +8,18 @@ defmodule ExtendExistingScrubberTest do
 
     use HtmlSanitizeEx.Scrubber
 
-    extend(HtmlSanitizeEx.Scrubber.MarkdownHTML)
+    extend(:markdown_html)
 
     allow_tag_with_any_attributes("p")
 
     allow_tag_with_uri_attributes("img", ["src"], ["data"])
+    allow_tag_with_uri_attributes("img", ["src"], ["http"])
+  end
 
-    strip_everything_not_covered()
+  defmodule MyScrubber2 do
+    use HtmlSanitizeEx.Scrubber
+
+    extend(ExtendExistingScrubberTest.MyScrubber)
   end
 
   defp scrub(text) do
@@ -23,10 +28,10 @@ defmodule ExtendExistingScrubberTest do
 
   test "strips everything except the allowed tags (for multiple tags)" do
     input =
-      ~S(<section><img src="data:test" /><header><script>code!</script><img src="test.jpg" /></header><p class="allowed">hello <script>code!</script></p></section>)
+      ~S(<section><img src="data:test" /><header><script>code!</script><img src="http://example.org" /></header><p class="allowed">hello <script>code!</script></p></section>)
 
     expected =
-      ~S(<img src="data:test" />code!<img src="test.jpg" /><p class="allowed">hello code!</p>)
+      ~S(<img src="data:test" />code!<img src="http://example.org" /><p class="allowed">hello code!</p>)
 
     assert expected == scrub(input)
   end
