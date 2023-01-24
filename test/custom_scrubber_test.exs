@@ -12,6 +12,8 @@ defmodule CustomScrubberTest do
 
     Meta.allow_tag_with_any_attributes("p")
 
+    Meta.allow_tags_with_style_attributes(["span", "html", "body"])
+
     Meta.strip_everything_not_covered()
   end
 

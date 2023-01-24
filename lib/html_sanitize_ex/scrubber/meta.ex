@@ -202,7 +202,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   defp allow_this_tag_with_style_attribute(tag_name) do
     quote do
       def scrub_attribute(unquote(tag_name), {"style", value}) do
-        {"style", scrub_css(value)}
+        {"style", HtmlSanitizeEx.Scrubber.CSS.scrub(value)}
       end
     end
   end
