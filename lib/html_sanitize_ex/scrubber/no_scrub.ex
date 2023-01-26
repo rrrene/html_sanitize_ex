@@ -13,9 +13,11 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
   end
 
   @doc """
-  Scrubs a single tag given its attributes and children.
-
-  Calls `scrub_attribute/2` to scrub individual attributes.
+  Scrubs its argument. Possible arguments are the following.
+  * A single tag given its attributes and children: `{tag, attributes, children}`.
+    In this case calls `scrub_attribute/2` to scrub individual attributes.
+  * Tokens like comments and doctypes: `{_token, children}`.
+  * A text node.
   """
   def scrub({tag, attributes, children}) do
     {tag, scrub_attributes(tag, attributes), children}
