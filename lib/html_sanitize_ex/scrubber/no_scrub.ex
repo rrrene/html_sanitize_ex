@@ -21,10 +21,11 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
     {tag, scrub_attributes(tag, attributes), children}
   end
 
-  def scrub({_token, children}), do: children
-
-  def scrub(text) do
-    text
+  @doc false
+  def scrub_attributes(tag, attributes) do
+    attributes
+    |> Enum.map(fn attr -> scrub_attribute(tag, attr) end)
+    |> Enum.reject(&is_nil(&1))
   end
 
   @doc """
@@ -48,10 +49,9 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
     attribute
   end
 
-  @doc false
-  def scrub_attributes(tag, attributes) do
-    attributes
-    |> Enum.map(fn attr -> scrub_attribute(tag, attr) end)
-    |> Enum.reject(&is_nil(&1))
+  def scrub({_token, children}), do: children
+
+  def scrub(text) do
+    text
   end
 end

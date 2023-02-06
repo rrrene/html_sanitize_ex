@@ -2,15 +2,9 @@ defmodule CustomScrubberTest do
   use ExUnit.Case, async: true
 
   defmodule Custom do
-    use HtmlSanitizeEx.Scrubber
-
-    remove_cdata_sections_before_scrub()
-
-    strip_comments()
+    use HtmlSanitizeEx.Scrubber, extend: :strip_tags
 
     allow_tag_with_any_attributes("p")
-
-    strip_everything_not_covered()
   end
 
   defp scrub(text) do

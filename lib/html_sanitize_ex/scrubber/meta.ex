@@ -5,7 +5,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   The StripTags scrubber is a good starting point:
 
-      defmodule HtmlSanitizeEx.Scrubber.StripTags do
+      defmodule MyStripTags do
         require HtmlSanitizeEx.Scrubber.Meta
         alias HtmlSanitizeEx.Scrubber.Meta
 
@@ -20,7 +20,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   You can use the `allow_tag_with_uri_attributes/3` and
   `allow_tag_with_these_attributes/2` macros to define what is allowed:
 
-      defmodule HtmlSanitizeEx.Scrubber.StripTags do
+      defmodule MyStripTags do
         require HtmlSanitizeEx.Scrubber.Meta
         alias HtmlSanitizeEx.Scrubber.Meta
 
@@ -43,14 +43,23 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   """
 
+  # defmacro allow_tags_and_scrub_their_attributes(list)
+  # defmacro allow_tag_with_these_attributes(tag_name, list \\ [])
+  # defmacro allow_tag_with_any_attributes(tag_name)
+  # defmacro allow_tag_with_this_attribute_values(tag_name, attribute, values)
+  # defmacro allow_tag_with_uri_attributes(tag_name, list, valid_schemes)
+  # defmacro allow_tags_with_style_attributes(list)
+
+  # defmacro remove_cdata_sections_before_scrub
+  # defmacro strip_comments
+  # defmacro strip_everything_not_covered
+
   @doc """
   Allow these tags and use the regular `scrub_attribute/2` function to scrub
   the attributes.
   """
   defmacro allow_tags_and_scrub_their_attributes(list) do
-    Enum.map(list, fn tag_name ->
-      allow_this_tag_and_scrub_its_attributes(tag_name)
-    end)
+    Enum.map(list, &allow_this_tag_and_scrub_its_attributes/1)
   end
 
   @doc """
@@ -62,9 +71,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   """
   defmacro allow_tag_with_these_attributes(tag_name, list \\ []) do
     list
-    |> Enum.map(fn attr_name ->
-      allow_this_tag_with_this_attribute(tag_name, attr_name)
-    end)
+    |> Enum.map(&allow_this_tag_with_this_attribute(tag_name, &1))
     |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
   end
 
@@ -112,10 +119,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   """
   defmacro allow_tag_with_uri_attributes(tag_name, list, valid_schemes) do
     quotes =
-      list
-      |> Enum.map(fn name ->
-        allow_tag_with_uri_attribute(tag_name, name, valid_schemes)
-      end)
+      Enum.map(list, &allow_tag_with_uri_attribute(tag_name, &1, valid_schemes))
 
     # |> tap(fn q ->
     #   IO.puts("### allow_tag_with_uri_attributes ###\n")
@@ -125,12 +129,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
     [allow_this_tag_and_scrub_its_attributes(tag_name)] ++ quotes
   end
 
-  @doc """
-
-  """
+  @doc false
   defmacro allow_tags_with_style_attributes(list) do
-    list
-    |> Enum.map(fn tag_name -> allow_this_tag_with_style_attribute(tag_name) end)
+    Enum.map(list, &allow_this_tag_with_style_attribute/1)
   end
 
   @doc """
@@ -155,32 +156,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   Ensures any tags/attributes not explicitly whitelisted until this
   statement are stripped.
   """
+  @deprecated ""
   defmacro strip_everything_not_covered do
-    replacement_linebreak =
-      "#{HtmlSanitizeEx.Parser.replacement_for_linebreak()}"
-
-    replacement_space = "#{HtmlSanitizeEx.Parser.replacement_for_space()}"
-    replacement_tab = "#{HtmlSanitizeEx.Parser.replacement_for_tab()}"
-
-    quote do
-      # If we haven't covered the attribute until here, we just scrab it.
-      def scrub_attribute("" <> _tag, _attribute), do: nil
-
-      # If we haven't covered the attribute until here, we just scrab it.
-      def scrub({"" <> _tag, _attributes, children}), do: children
-
-      def scrub({"" <> _tag, children}), do: children
-
-      def scrub(unquote(" " <> replacement_linebreak <> " ") <> text), do: text
-
-      def scrub(unquote(" " <> replacement_space <> " ") <> text),
-        do: " " <> text
-
-      def scrub(unquote(" " <> replacement_tab <> " ") <> text), do: text
-
-      # Text is left alone
-      def scrub("" <> text), do: text
-    end
+    __add__before_compile_for_legacy_support__()
   end
 
   defp allow_this_tag_and_scrub_its_attributes(tag_name) do
@@ -213,76 +191,20 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   defp allow_tag_with_uri_attribute(tag_name, attr_name, valid_schemes) do
     quote do
-      def scrub_attribute(unquote(tag_name), {unquote(attr_name), "&" <> value}) do
-        nil
-      end
-
-      @protocol_separator ":|(&#0*58)|(&#x70)|(&#x0*3a)|(%|&#37;)3A"
-      @protocol_separator_regex Regex.compile!(@protocol_separator, "mi")
-
-      @http_like_scheme "(?<scheme>.+?)(#{@protocol_separator})//"
-      @other_schemes "(?<other_schemes>.+)(#{@protocol_separator})"
-
-      @scheme_capture Regex.compile!(
-                        "(#{@http_like_scheme})|(#{@other_schemes})",
-                        "mi"
-                      )
-
-      @max_scheme_length 20
-
       Module.register_attribute(
         __MODULE__,
-        :scrub_attribute,
+        :scrub_uri_attribute,
         accumulate: true
       )
 
-      @scrub_attribute {unquote(tag_name),
-                        {unquote(attr_name), unquote(valid_schemes)}}
-
-      def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
-        IO.inspect(
-          {__MODULE__, :scrub_attribute, unquote(tag_name),
-           {unquote(attr_name), uri}}
-        )
-
-        valid_schema =
-          if uri =~ @protocol_separator_regex do
-            valid_schemes =
-              @scrub_attribute
-              |> Enum.filter(fn {tag, list} ->
-                tag == unquote(tag_name)
-              end)
-              |> Enum.map(&elem(&1, 1))
-              |> List.flatten()
-              |> Enum.filter(fn {attr, list} ->
-                attr == unquote(attr_name)
-              end)
-              |> Enum.map(&elem(&1, 1))
-              |> List.flatten()
-
-            case Regex.named_captures(
-                   @scheme_capture,
-                   String.slice(uri, 0..@max_scheme_length)
-                 ) do
-              %{"scheme" => scheme, "other_schemes" => ""} ->
-                scheme in valid_schemes
-
-              %{"other_schemes" => scheme, "scheme" => ""} ->
-                scheme in valid_schemes
-
-              value ->
-                false
-            end
-          else
-            true
-          end
-
-        if valid_schema do
-          {unquote(attr_name), uri}
-        end
-      end
+      @scrub_uri_attribute {{unquote(tag_name), unquote(attr_name)},
+                            unquote(valid_schemes)}
     end
+  end
 
-    # |> tap(fn q -> IO.puts(Code.format_string!(Macro.to_string(q))) end)
+  defp __add__before_compile_for_legacy_support__ do
+    quote do
+      @before_compile HtmlSanitizeEx.ScrubberCompiler
+    end
   end
 end

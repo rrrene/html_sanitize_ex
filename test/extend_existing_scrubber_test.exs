@@ -2,13 +2,7 @@ defmodule ExtendExistingScrubberTest do
   use ExUnit.Case, async: true
 
   defmodule MyScrubber do
-    # - allow additional tags
-    # - allow additional attributes
-    # - allow additional attribute restrictions (e.g. URI schemes for anchors and images)
-
-    use HtmlSanitizeEx.Scrubber
-
-    extend(:markdown_html)
+    use HtmlSanitizeEx.Scrubber, extend: :markdown_html
 
     allow_tag_with_any_attributes("p")
 
@@ -17,9 +11,7 @@ defmodule ExtendExistingScrubberTest do
   end
 
   defmodule MyScrubber2 do
-    use HtmlSanitizeEx.Scrubber
-
-    extend(ExtendExistingScrubberTest.MyScrubber)
+    use HtmlSanitizeEx.Scrubber, extend: ExtendExistingScrubberTest.MyScrubber
   end
 
   defp scrub(text) do

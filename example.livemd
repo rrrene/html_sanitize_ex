@@ -6,17 +6,43 @@
 Mix.install([{:html_sanitize_ex, path: "/data"}], force: true)
 ```
 
-Let's create a scrubber which does everything `HtmlSanitizeEx.markdown_html /1` does.
+Let's create a scrubber which does everything `HtmlSanitizeEx.markdown_html/1` does.
 
 ```elixir
 defmodule MyScrubber do
-  use HtmlSanitizeEx.Scrubber
+  use HtmlSanitizeEx.Scrubber, extend: :markdown_html
 
-  extend :markdown_html do
-    allow_tag_with_any_attributes("p")
+  allow_tag "p", attributes: :any
 
-    allow_tag_with_uri_attributes("img", ["src"], ["data"])
+  allow_tag "img",
+    attributes: ["width", "height"],
+    uri_attributes: ["src": ["http", "https"]]
+
+  allow_tag "img",
+    attributes: ["width", "height"],
+    uri_attributes: ["src": ["http", "https"]]
+
+  allow "a" do
+    attributes ["name", "title"]
+
+    attribute "href", "http:" <> _
+    attribute "href", "https:" <> _
+    attribute "href", "mailto:" <> _
+
+    attribute "href" do
+      allow "http:" <> _,
+            "https:" <> _,
+            "mailto:" <> _
+    end
+
+    attribute "target", "_blank"
+
+    attribute "rel", "noopener"
+    attribute "rel", "noreferrer"
   end
+
+  allow_tag_with_uri_attributes   "img", ["src"], ["http", "https"]
+  allow_tag_with_these_attributes "img", ["width", "height"]
 end
 
 ~S"""
