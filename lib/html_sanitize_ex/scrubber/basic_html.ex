@@ -6,12 +6,7 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   Does not allow any mailto-links, styling, HTML5 tags, video embeds etc.
   """
 
-  use HtmlSanitizeEx.Scrubber
-
-  # Removes any CDATA tags before the traverser/scrubber runs.
-  remove_cdata_sections_before_scrub()
-
-  strip_comments()
+  use HtmlSanitizeEx, extend: :strip_tags
 
   allow_tag_with_uri_attributes("a", ["href"], ["http", "https", "mailto"])
   allow_tag_with_these_attributes("a", ["name", "title"])
@@ -54,6 +49,4 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   allow_tag_with_these_attributes("tr", [])
   allow_tag_with_these_attributes("u", [])
   allow_tag_with_these_attributes("ul", [])
-
-  strip_everything_not_covered()
 end

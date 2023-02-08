@@ -2,7 +2,7 @@ defmodule ExtendExistingScrubberTest do
   use ExUnit.Case, async: true
 
   defmodule MyScrubber do
-    use HtmlSanitizeEx.Scrubber, extend: :markdown_html
+    use HtmlSanitizeEx, extend: :markdown_html
 
     allow_tag_with_any_attributes("p")
 
@@ -11,11 +11,7 @@ defmodule ExtendExistingScrubberTest do
   end
 
   defmodule MyScrubber2 do
-    use HtmlSanitizeEx.Scrubber, extend: ExtendExistingScrubberTest.MyScrubber
-  end
-
-  defp scrub(text) do
-    HtmlSanitizeEx.Scrubber.scrub(text, __MODULE__.MyScrubber)
+    use HtmlSanitizeEx, extend: ExtendExistingScrubberTest.MyScrubber
   end
 
   test "strips everything except the allowed tags (for multiple tags)" do
@@ -25,6 +21,6 @@ defmodule ExtendExistingScrubberTest do
     expected =
       ~S(<img src="data:test" />code!<img src="http://example.org" /><p class="allowed">hello code!</p>)
 
-    assert expected == scrub(input)
+    assert expected == __MODULE__.MyScrubber.sanitize(input)
   end
 end

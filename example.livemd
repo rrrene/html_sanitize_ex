@@ -22,23 +22,41 @@ defmodule MyScrubber do
     attributes: ["width", "height"],
     uri_attributes: ["src": ["http", "https"]]
 
+  # -------------------------
+
+  allow_tag_with_uri_attributes("a", ["href"], ["http", "https", "mailto"])
+  allow_tag_with_these_attributes("a", ["name", "title"])
+
+  allow_tag_with_this_attribute_values("a", "target", ["_blank"])
+
+  allow_tag_with_this_attribute_values("a", "rel", [
+    "noopener",
+    "noreferrer"
+  ])
+
+  # -------------------------
+
+  allow_tag(
+    "img",
+    [
+      {"target", ["_blank_"]},
+      {"style", :css},
+      {"src", :uri, ["http", "https"]},
+      "width",
+      "height"
+    ]
+  )
+
+  # -------------------------
+
   allow "a" do
     attributes ["name", "title"]
 
-    attribute "href", "http:" <> _
-    attribute "href", "https:" <> _
-    attribute "href", "mailto:" <> _
-
-    attribute "href" do
-      allow "http:" <> _,
-            "https:" <> _,
-            "mailto:" <> _
-    end
+    attribute "href", "http:" <> _, "https:" <> _, "mailto:" <> _
 
     attribute "target", "_blank"
 
-    attribute "rel", "noopener"
-    attribute "rel", "noreferrer"
+    attribute "rel", "noopener", "noreferrer"
   end
 
   allow_tag_with_uri_attributes   "img", ["src"], ["http", "https"]

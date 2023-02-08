@@ -19,12 +19,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   Sanitizes all malicious content.
   """
 
-  use HtmlSanitizeEx.Scrubber
-
-  # Removes any CDATA tags before the traverser/scrubber runs.
-  remove_cdata_sections_before_scrub()
-
-  strip_comments()
+  use HtmlSanitizeEx, extend: :strip_tags
 
   allow_tag_with_uri_attributes("a", ["href"], ["http", "https", "mailto"])
 
@@ -2222,6 +2217,4 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   defp scrub_css(text) do
     HtmlSanitizeEx.Scrubber.CSS.scrub(text)
   end
-
-  strip_everything_not_covered()
 end

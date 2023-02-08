@@ -5,26 +5,15 @@ defmodule HtmlSanitizeEx.Scrubber.MarkdownHTML do
 
   Technically this is a more relaxed version of the BasicHTML scrubber.
 
-  Does not allow any mailto-links, styling, HTML5 tags, video embeds etc.
+  Does not allow any styling, HTML5 tags, video embeds etc.
   """
 
-  use HtmlSanitizeEx.Scrubber
-
-  # Removes any CDATA tags before the traverser/scrubber runs.
-  remove_cdata_sections_before_scrub()
-
-  strip_comments()
+  use HtmlSanitizeEx, extend: :strip_tags
 
   allow_tag_with_uri_attributes("a", ["href"], ["http", "https", "mailto"])
   allow_tag_with_these_attributes("a", ["name", "title"])
-
   allow_tag_with_this_attribute_values("a", "target", ["_blank"])
-
-  allow_tag_with_this_attribute_values("a", "rel", [
-    "noopener",
-    "noreferrer"
-  ])
-
+  allow_tag_with_this_attribute_values("a", "rel", ["noopener", "noreferrer"])
   allow_tag_with_these_attributes("b", [])
   allow_tag_with_these_attributes("blockquote", [])
   allow_tag_with_these_attributes("br", [])
@@ -39,16 +28,8 @@ defmodule HtmlSanitizeEx.Scrubber.MarkdownHTML do
   allow_tag_with_these_attributes("h6", [])
   allow_tag_with_these_attributes("hr", [])
   allow_tag_with_these_attributes("i", [])
-
   allow_tag_with_uri_attributes("img", ["src"], ["http", "https"])
-
-  allow_tag_with_these_attributes("img", [
-    "width",
-    "height",
-    "title",
-    "alt"
-  ])
-
+  allow_tag_with_these_attributes("img", ["width", "height", "title", "alt"])
   allow_tag_with_these_attributes("li", [])
   allow_tag_with_these_attributes("ol", [])
   allow_tag_with_these_attributes("p", [])
@@ -63,6 +44,4 @@ defmodule HtmlSanitizeEx.Scrubber.MarkdownHTML do
   allow_tag_with_these_attributes("tr", [])
   allow_tag_with_these_attributes("u", [])
   allow_tag_with_these_attributes("ul", [])
-
-  strip_everything_not_covered()
 end
