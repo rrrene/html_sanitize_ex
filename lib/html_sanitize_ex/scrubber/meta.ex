@@ -125,10 +125,6 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
     |> Enum.map(fn tag_name ->
       allow_this_tag_with_style_attribute(tag_name)
     end)
-    |> Enum.concat(
-      list
-      |> Enum.map(fn tag_name -> allow_this_tag_and_scrub_its_attributes(tag_name) end)
-    )
   end
 
   @doc """
