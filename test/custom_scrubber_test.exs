@@ -12,7 +12,7 @@ defmodule CustomScrubberTest do
 
     Meta.allow_tag_with_any_attributes("p")
 
-    Meta.allow_tags_with_style_attributes(["span", "html", "body"])
+    Meta.allow_tags_with_style_attributes(["span", "header"])
 
     Meta.strip_everything_not_covered()
   end
@@ -23,9 +23,11 @@ defmodule CustomScrubberTest do
 
   test "strips everything except the allowed tags (for multiple tags)" do
     input =
-      "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
+      ~S(<section><header style="font-weight: bold"><script>code!</script></header>
+          <p><span style="font-weight: bold; font-style: italic">hello</span><script>code!</script></p></section>)
 
-    expected = "code!<p>hello code!</p>"
+    expected = ~S(<header style="font-weight: bold">code!</header>
+          <p><span style="font-weight: bold; font-style: italic">hello</span>code!</p>)
     assert expected == scrub(input)
   end
 end
