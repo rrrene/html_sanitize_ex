@@ -28,8 +28,10 @@ defmodule CustomScrubberTest do
       ~S(<section><header style="font-weight: bold"><script>code!</script></header>
           <p><span style="font-weight: bold; font-style: italic">hello</span><script>code!</script></p></section>)
 
-    expected = ~S(<header style="font-weight: bold">code!</header>
+    expected =
+      ~S(<header style="font-weight: bold">code!</header>
           <p><span style="font-weight: bold; font-style: italic">hello</span>code!</p>)
+
     assert expected == scrub(input)
   end
 
