@@ -8,7 +8,7 @@ It is the first Hex package to come out of the [elixirstatus.com](http://elixirs
 
 `html_sanitize_ex` parses a given HTML string and, based on the used [Scrubber](https://github.com/rrrene/html_sanitize_ex/tree/master/lib/html_sanitize_ex/scrubber), either completely strips it from HTML tags or sanitizes it by only allowing certain HTML elements and attributes to be present.
 
-**NOTE:** The one thing missing at this moment is **support for styles**. To add this, we have to implement a Scrubber for CSS, to prevent nasty CSS hacks using `<style>` tags and attributes.
+**NOTE:** The one thing missing at this moment is ***support for styles***. To add this, we have to implement a Scrubber for CSS, to prevent nasty CSS hacks using `<style>` tags and attributes.
 
 Otherwise `html_sanitize_ex` is a full-featured HTML sanitizer.
 
