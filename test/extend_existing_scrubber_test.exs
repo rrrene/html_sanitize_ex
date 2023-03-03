@@ -2,7 +2,7 @@ defmodule ExtendExistingScrubberTest do
   use ExUnit.Case, async: true
 
   defmodule MyScrubber do
-    use HtmlSanitizeEx, extend: :markdown_html
+    use HtmlSanitizeEx, extend: :strip_tags
 
     allow_tag_with_any_attributes("p")
 
@@ -21,6 +21,6 @@ defmodule ExtendExistingScrubberTest do
     expected =
       ~S(<img src="data:test" />code!<img src="http://example.org" /><p class="allowed">hello code!</p>)
 
-    assert expected == __MODULE__.MyScrubber.sanitize(input)
+    assert expected == __MODULE__.MyScrubber2.sanitize(input)
   end
 end
