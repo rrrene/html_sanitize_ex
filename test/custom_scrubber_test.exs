@@ -4,7 +4,24 @@ defmodule CustomScrubberTest do
   defmodule Custom1 do
     use HtmlSanitizeEx, extend: :strip_tags
 
+<<<<<<< HEAD
     allow_tag_with_any_attributes("p")
+=======
+    # Removes any CDATA tags before the traverser/scrubber runs.
+    Meta.remove_cdata_sections_before_scrub()
+
+    Meta.strip_comments()
+
+    Meta.allow_tag_with_any_attributes("p")
+
+    Meta.allow_tags_with_style_attributes(["span", "html", "body"])
+
+    Meta.strip_everything_not_covered()
+  end
+
+  defp scrub(text) do
+    HtmlSanitizeEx.Scrubber.scrub(text, __MODULE__.Custom)
+>>>>>>> master
   end
 
   test "strips everything except the allowed tags (for multiple tags)" do

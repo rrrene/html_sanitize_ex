@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.3
+
+- Allow `mochiweb` dep to be `~> 2.15 or ~> 3.1`
+
 ## 1.4.2
 
 - Fix regression when parsing schemes from URIs

@@ -4,7 +4,7 @@ defmodule HtmlSanitizeEx.Mixfile do
   def project do
     [
       app: :html_sanitize_ex,
-      version: "1.4.2",
+      version: "1.4.3",
       elixir: "~> 1.0",
       description: "HTML sanitizer for Elixir",
       source_url: "https://github.com/rrrene/html_sanitize_ex",
@@ -39,7 +39,7 @@ defmodule HtmlSanitizeEx.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:mochiweb, "~> 2.15"},
+      {:mochiweb, "~> 2.15 or ~> 3.1"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
