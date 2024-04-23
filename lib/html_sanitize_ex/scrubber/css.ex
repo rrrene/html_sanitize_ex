@@ -14,6 +14,9 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
         nil -> ""
       end
     end)
+
+
+
   end
 
   defp scrub_css("azimuth", val), do: validate({"azimuth", scrub_val(val)})
@@ -156,7 +159,8 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
     val = if String.match?(val, ~r/(\\|&)/), do: "", else: val
 
     Regex.replace(~r/(\S+)/, val, fn _all, a ->
-      if(allowed_keyword?(a) || measured_unit?(a), do: a, else: "")
+      #if(allowed_keyword?(a) || measured_unit?(a), do: a, else: "")
+      a
     end)
   end
 
