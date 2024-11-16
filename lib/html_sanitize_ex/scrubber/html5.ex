@@ -668,7 +668,9 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "sandbox",
     "seamless",
     "width",
-    "height"
+    "height",
+    "allow",
+    "allowfullscreen"
   ])
 
   Meta.allow_tag_with_uri_attributes(
