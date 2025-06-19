@@ -125,6 +125,45 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert input == full_html_sanitize(input)
   end
 
+  test "does not strip valid attributes from svg and shapes" do
+    icon =
+      ~s(<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"></path>
+        </svg>)
+
+    assert icon == full_html_sanitize(icon)
+  end
+
+  test "strip unsafe colours for fill and stroke in svg" do
+    evil_hero_icon =
+      ~s|<svg xmlns="http://www.w3.org/2000/svg"  fill="url(javascript:alert(1))" stroke="url(javascript:alert(1))" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"></path>
+        </svg>|
+
+    good_hero_icon =
+      ~s|<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"></path>
+        </svg>|
+
+    assert good_hero_icon == full_html_sanitize(evil_hero_icon)
+  end
+
+  test "strip unsafe colours for fill and stroke in rect, circle, line, polyline, polygon, path, g" do
+    for tag <- ~w(rect circle line polyline polygon path g) do
+      evil_hero_icon =
+        ~s|<svg xmlns="http://www.w3.org/2000/svg"  viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <#{tag} fill="url(javascript:alert(1))" stroke="url(javascript:alert(1))" stroke-linecap="round" stroke-linejoin="round"></#{tag}>
+        </svg>|
+
+      good_hero_icon =
+        ~s|<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <#{tag} stroke-linecap="round" stroke-linejoin="round"></#{tag}>
+        </svg>|
+
+      assert good_hero_icon == full_html_sanitize(evil_hero_icon)
+    end
+  end
+
   test "make sure a very long URI is truncated before capturing URI scheme" do
     input =
       "<img src='#{File.read!(Path.join(__DIR__, "html5_test_data_uri"))}'>"
