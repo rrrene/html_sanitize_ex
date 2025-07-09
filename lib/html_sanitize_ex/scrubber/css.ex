@@ -179,6 +179,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
     "green",
     "!important",
     "italic",
+    "justify",
     "left",
     "lime",
     "maroon",
