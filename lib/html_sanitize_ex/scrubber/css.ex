@@ -211,7 +211,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
   defp measured_unit?(val) do
     String.match?(
       val,
-      ~r/\A(#[0-9a-f]+|rgb\(\d+%?,\d*%?,?\d*%?\)?|-?\d{0,2}\.?\d{0,2}(cm|em|ex|in|mm|pc|pt|px|%|,|\))?)\z/
+      ~r/\A(#[0-9a-f]+|rgb\(\d+%?,\d*%?,?\d*%?\)?|rgba\(\d+%?,\d*%?,?\d*%?,?\d*\.?\d*\)?|-?\d{0,2}\.?\d{0,2}(cm|em|ex|in|mm|pc|pt|px|%|,|\))?)\z/
     )
   end
 end
