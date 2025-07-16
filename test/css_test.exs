@@ -8,7 +8,9 @@ defmodule HtmlSanitizeExScrubberCSSTest do
   @good_css [
     ".test { color: red; border: 1px solid brown; }",
     "div.foo { width: 500px; height: 200px; }",
+    "span.foo { background: linear-gradient(rgba(255, 0, 0, 0) 65%, rgb(255, 0, 0) 35%); }",
     "span.foo { background: rgba(255, 0, 0, 0); }",
+    "span.foo { background: rgb(255, 0, 0); }",
     # gibberish should work
     "GI b gkljfl kj { { { ********"
   ]
