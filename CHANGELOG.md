@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.4
+
+- Update `mochiweb` to version 3.2.2 in `mix.lock` for OTP 27 compatibility
+
 ## 1.4.3
 
 - Allow `mochiweb` dep to be `~> 2.15 or ~> 3.1`
