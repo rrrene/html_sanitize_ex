@@ -125,6 +125,17 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert input == full_html_sanitize(input)
   end
 
+  test "does not strip details" do
+    input = """
+    <details name="foo" class="bar" open="open">
+      <summary>Details</summary>
+      Something small enough to escape casual notice.
+    </details>
+    """
+
+    assert input == full_html_sanitize(input)
+  end
+
   test "make sure a very long URI is truncated before capturing URI scheme" do
     input =
       "<img src='#{File.read!(Path.join(__DIR__, "html5_test_data_uri"))}'>"
