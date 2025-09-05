@@ -2123,6 +2123,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   Meta.allow_tags_with_style_attributes([
     "a",
     "blockquote",
+    "body",
     "br",
     "code",
     "del",
@@ -2181,6 +2182,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "sub",
     "summary",
     "sup",
+    "svg",
     "table",
     "tbody",
     "td",
@@ -2198,6 +2200,51 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "video",
     "wbr"
   ])
+
+  # ---------- SVG shapes & groups -----------------------------------
+  @shape_attrs ~w(fill stroke stroke-width stroke-linecap stroke-linejoin class transform)
+  @geo_attrs ~w(d x y cx cy r x1 y1 x2 y2 points)
+
+  @svg_ns "http://www.w3.org/2000/svg"
+  @xlink_ns "http://www.w3.org/1999/xlink"
+  @svg_root_attrs ~w(viewbox width height fill stroke stroke-width class role aria-label)
+
+  defp keep(attrs, whitelist) do
+    Enum.filter(attrs, fn {n, _} -> n in whitelist end)
+    |> Enum.filter(fn {n, v} ->
+      (n !== "fill" and n !== "stroke") or safe_colour?(v)
+    end)
+  end
+
+  # Reject gradients / external refs in colour attributes
+  defp safe_colour?(v) do
+    not String.starts_with?(v, "url(") and
+      not String.contains?(v, "javascript:") and
+      byte_size(v) < 64
+  end
+
+  def scrub({"svg", attrs, kids}) do
+    {"svg",
+     Enum.filter(attrs, fn
+       {"xmlns", @svg_ns} -> true
+       {"xmlns:xlink", @xlink_ns} -> true
+       {"fill", v} -> safe_colour?(v)
+       {"stroke", v} -> safe_colour?(v)
+       {n, _} when n in @svg_root_attrs -> true
+       _ -> false
+     end), Enum.map(kids, &scrub/1)}
+  end
+
+  def scrub({"g", attrs, kids}),
+    do: {"g", keep(attrs, @shape_attrs), Enum.map(kids, &scrub/1)}
+
+  def scrub({"path", attrs, _}),
+    do: {"path", keep(attrs, @shape_attrs ++ ["d"]), []}
+
+  for tag <- ~w(rect circle line polyline polygon) do
+    def scrub({unquote(tag), attrs, _kids}),
+      do: {unquote(tag), keep(attrs, @shape_attrs ++ @geo_attrs), []}
+  end
 
   # style tags
 
