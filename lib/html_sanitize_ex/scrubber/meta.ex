@@ -122,7 +122,9 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   """
   defmacro allow_tags_with_style_attributes(list) do
     list
-    |> Enum.map(fn tag_name -> allow_this_tag_with_style_attribute(tag_name) end)
+    |> Enum.map(fn tag_name ->
+      allow_this_tag_with_style_attribute(tag_name)
+    end)
   end
 
   @doc """
@@ -213,23 +215,17 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       end
 
       @protocol_separator ":|(&#0*58)|(&#x70)|(&#x0*3a)|(%|&#37;)3A"
-      @protocol_separator_regex Regex.compile!(@protocol_separator, "mi")
 
       @http_like_scheme "(?<scheme>.+?)(#{@protocol_separator})//"
       @other_schemes "(?<other_schemes>mailto)(#{@protocol_separator})"
-
-      @scheme_capture Regex.compile!(
-                        "(#{@http_like_scheme})|(#{@other_schemes})",
-                        "mi"
-                      )
 
       @max_scheme_length 20
 
       def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
         valid_schema =
-          if uri =~ @protocol_separator_regex do
+          if uri =~ ~r/#{@protocol_separator}/mi do
             case Regex.named_captures(
-                   @scheme_capture,
+                   ~r/(#{@http_like_scheme})|(#{@other_schemes})/mi,
                    uri |> String.slice(0..@max_scheme_length)
                  ) do
               %{"scheme" => scheme, "other_schemes" => ""} ->
