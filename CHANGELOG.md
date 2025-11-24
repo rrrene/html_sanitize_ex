@@ -2,7 +2,9 @@
 
 ## 1.4.4
 
+- Fix compatibility & compiler warnings with Elixir 1.19
 - Update `mochiweb` to version 3.2.2 in `mix.lock` for OTP 27 compatibility
+- Add missing `<details>` tag to `HTML5` scrubber
 
 ## 1.4.3
 
