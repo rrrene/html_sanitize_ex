@@ -5,6 +5,8 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
   This meant for testing purposes and as a template for your own scrubber.
   """
 
+  def sanitize(html), do: HtmlSanitizeEx.Scrubber.scrub(html, __MODULE__)
+
   @doc """
   Can be used to preprocess the given +html+ String before it is scrubbed.
   """
@@ -31,7 +33,8 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
 
   @doc false
   def scrub_attributes(tag, attributes) do
-    Enum.map(attributes, fn attr -> scrub_attribute(tag, attr) end)
+    attributes
+    |> Enum.map(fn attr -> scrub_attribute(tag, attr) end)
     |> Enum.reject(&is_nil(&1))
   end
 

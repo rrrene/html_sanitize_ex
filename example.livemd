@@ -1,0 +1,78 @@
+# Untitled notebook
+
+## Section
+
+```elixir
+Mix.install([{:html_sanitize_ex, path: "/data"}], force: true)
+```
+
+Let's create a scrubber which does everything `HtmlSanitizeEx.markdown_html/1` does.
+
+```elixir
+defmodule MyScrubber do
+  use HtmlSanitizeEx.Scrubber, extend: :markdown_html
+
+  allow_tag "p", attributes: :any
+
+  allow_tag "img",
+    attributes: ["width", "height"],
+    uri_attributes: ["src": ["http", "https"]]
+
+  allow_tag "img",
+    attributes: ["width", "height"],
+    uri_attributes: ["src": ["http", "https"]]
+
+  # -------------------------
+
+  allow_tag_with_uri_attributes("a", ["href"], ["http", "https", "mailto"])
+  allow_tag_with_these_attributes("a", ["name", "title"])
+
+  allow_tag_with_this_attribute_values("a", "target", ["_blank"])
+
+  allow_tag_with_this_attribute_values("a", "rel", [
+    "noopener",
+    "noreferrer"
+  ])
+
+  # -------------------------
+
+  allow_tag(
+    "img",
+    [
+      {"target", ["_blank_"]},
+      {"style", :css},
+      {"src", :uri, ["http", "https"]},
+      "width",
+      "height"
+    ]
+  )
+
+  # -------------------------
+
+  allow "a" do
+    attributes ["name", "title"]
+
+    attribute "href", "http:" <> _, "https:" <> _, "mailto:" <> _
+
+    attribute "target", "_blank"
+
+    attribute "rel", "noopener", "noreferrer"
+  end
+
+  allow_tag_with_uri_attributes   "img", ["src"], ["http", "https"]
+  allow_tag_with_these_attributes "img", ["width", "height"]
+end
+
+~S"""
+<section>
+  <img src="data:test" />
+  <header>
+    <script>alert("code!");</script>
+    <img src="test.jpg" />
+  </header>
+  <p class="allowed">hello <script>code!</script></p>
+</section>
+"""
+|> HtmlSanitizeEx.Scrubber.scrub(MyScrubber)
+|> IO.puts()
+```

@@ -3,13 +3,10 @@ defmodule HtmlSanitizeEx.Scrubber.StripTags do
   Strips all tags.
   """
 
-  require HtmlSanitizeEx.Scrubber.Meta
-  alias HtmlSanitizeEx.Scrubber.Meta
+  use HtmlSanitizeEx
 
   # Removes any CDATA tags before the traverser/scrubber runs.
-  Meta.remove_cdata_sections_before_scrub()
+  remove_cdata_sections_before_scrub()
 
-  Meta.strip_comments()
-
-  Meta.strip_everything_not_covered()
+  strip_comments()
 end

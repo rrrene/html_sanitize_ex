@@ -1,4 +1,6 @@
 defmodule HtmlSanitizeEx.Scrubber do
+  def scrub(html, scrubber_module)
+
   def scrub("", _) do
     ""
   end
