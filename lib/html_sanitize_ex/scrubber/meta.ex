@@ -178,8 +178,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   defp allow_this_tag_and_scrub_its_attributes(tag_name) do
     quote do
       def scrub({unquote(tag_name), attributes, children}) do
-        {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes),
-         children}
+        {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes), children}
       end
 
       defp scrub_attributes(unquote(tag_name), attributes) do

@@ -251,9 +251,7 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
   @tag href_scrubbing: true
   test "should only allow http/https protocols" do
     assert "<a href=\"foo\">baz</a>" ==
-             basic_html_sanitize(
-               ~s(<a href="foo" onclick="bar"><script>baz</script></a>)
-             )
+             basic_html_sanitize(~s(<a href="foo" onclick="bar"><script>baz</script></a>))
 
     assert "<a href=\"http://example.com\">baz</a>" ==
              basic_html_sanitize(
@@ -361,9 +359,7 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
   test "should_sanitize_non_alpha_and_non_digit_characters_in_tags" do
     assert "<a></a>foo" ==
-             basic_html_sanitize(
-               "<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>"
-             )
+             basic_html_sanitize("<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>")
   end
 
   test "should_sanitize_invalid_tag_names_in_single_tags" do

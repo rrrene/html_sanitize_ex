@@ -222,16 +222,12 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
 
   test "should_sanitize_invalid_tag_names" do
     assert "a b cd e f" ==
-             strip_tags(
-               ~s(a b c<script/XSS src="http://ha.ckers.org/xss.js"></script>d e f)
-             )
+             strip_tags(~s(a b c<script/XSS src="http://ha.ckers.org/xss.js"></script>d e f))
   end
 
   test "should_sanitize_non_alpha_and_non_digit_characters_in_tags" do
     assert "foo" ==
-             strip_tags(
-               "<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>"
-             )
+             strip_tags("<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>")
   end
 
   @tag cdata: true
@@ -266,9 +262,7 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
 
   test "should not destroy white-space /2" do
     assert "sometext with break between tags\r\nwill remove break" ==
-             strip_tags(
-               "some<b>text with break between tags</b>\r\n<i>will remove break</i>"
-             )
+             strip_tags("some<b>text with break between tags</b>\r\n<i>will remove break</i>")
   end
 
   test "should not destroy white-space /3" do

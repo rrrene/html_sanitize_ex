@@ -166,9 +166,7 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
   @tag href_scrubbing: true
   test "test_strip_links_leaves_nonlink_tags" do
     assert "<a href=\"almost\">My mind</a>\n<a href=\"almost\">all <b>day</b> long</a>" ==
-             sanitize(
-               "<a href='almost'>My mind</a>\n<A href='almost'>all <b>day</b> long</A>"
-             )
+             sanitize("<a href='almost'>My mind</a>\n<A href='almost'>all <b>day</b> long</A>")
   end
 
   @tag href_scrubbing: true
@@ -259,9 +257,7 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
 
   test "sanitize_script" do
     assert "a b cblah blah blahd e f" ==
-             sanitize(
-               "a b c<script language=\"Javascript\">blah blah blah</script>d e f"
-             )
+             sanitize("a b c<script language=\"Javascript\">blah blah blah</script>d e f")
   end
 
   @tag href_scrubbing: true
@@ -295,14 +291,10 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
              sanitize(~s(<a href="foo" onclick="bar"><script>baz</script></a>))
 
     assert "<a href=\"http://example.com\">baz</a>" ==
-             sanitize(
-               ~s(<a href="http://example.com" onclick="bar"><script>baz</script></a>)
-             )
+             sanitize(~s(<a href="http://example.com" onclick="bar"><script>baz</script></a>))
 
     assert "<a href=\"https://example.com\">baz</a>" ==
-             sanitize(
-               ~s(<a href="https://example.com" onclick="bar"><script>baz</script></a>)
-             )
+             sanitize(~s(<a href="https://example.com" onclick="bar"><script>baz</script></a>))
   end
 
   # test "video_poster_sanitization" do
@@ -396,9 +388,7 @@ defmodule HtmlSanitizeExScrubberMarkdownHTMLTest do
 
   test "should_sanitize_non_alpha_and_non_digit_characters_in_tags" do
     assert "<a></a>foo" ==
-             sanitize(
-               "<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>"
-             )
+             sanitize("<a onclick!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>foo</a>")
   end
 
   test "should_sanitize_invalid_tag_names_in_single_tags" do
