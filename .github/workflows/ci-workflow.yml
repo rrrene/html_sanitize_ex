@@ -15,49 +15,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        otp: [20.3, 21.3, 22.3, 23.3, 24.0, 25.1]
-        elixir: [1.7.4, 1.8.2, 1.9.4, 1.10.4, 1.11.4, 1.12.2, 1.14.1]
+        otp: [25.3, 26.2, 27.3, 28.1]
+        elixir: [1.15.7, 1.16.2, 1.17.3, 1.18.4, 1.19.3]
         exclude:
-          - otp: 25.1
-            elixir: 1.7.4
-          - otp: 25.1
-            elixir: 1.8.2
-          - otp: 25.1
-            elixir: 1.9.4
-          - otp: 25.1
-            elixir: 1.10.4
-          - otp: 25.1
-            elixir: 1.11.4
-          - otp: 25.1
-            elixir: 1.12.2
-          - otp: 24.0
-            elixir: 1.7.4
-          - otp: 24.0
-            elixir: 1.8.2
-          - otp: 24.0
-            elixir: 1.9.4
-          - otp: 24.0
-            elixir: 1.10.4
-          - otp: 23.3
-            elixir: 1.7.4
-          - otp: 23.3
-            elixir: 1.8.2
-          - otp: 23.3
-            elixir: 1.9.4
-          - otp: 22.3
-            elixir: 1.14.1
-          - otp: 21.3
-            elixir: 1.12.2
-          - otp: 21.3
-            elixir: 1.14.1
-          - otp: 20.3
-            elixir: 1.10.4
-          - otp: 20.3
-            elixir: 1.11.4
-          - otp: 20.3
-            elixir: 1.12.2
-          - otp: 20.3
-            elixir: 1.14.1
+          - elixir: 1.15.7
+            otp: 27.3
+          - elixir: 1.15.7
+            otp: 28.1
+          - elixir: 1.16.2
+            otp: 27.3
+          - elixir: 1.16.2
+            otp: 28.1
+          - elixir: 1.17.3
+            otp: 28.1
+          - elixir: 1.18.4
+            otp: 28.1
+          - elixir: 1.19.3
+            otp: 25.3
+
     steps:
       - uses: actions/checkout@v2.3.1
         with:
