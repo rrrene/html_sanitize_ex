@@ -1050,7 +1050,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "translate",
     "name",
     "http-equiv",
-    "content",
+    # "content", # implemented separately below
     "charset"
   ])
 
@@ -1132,7 +1132,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "tabindex",
     "title",
     "translate",
-    "data",
+    # "data", # implemented separately below
     "type",
     "typemustmatch",
     "name",
@@ -2242,6 +2242,22 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   def scrub_attribute("style", {"media", value}), do: {"media", value}
   def scrub_attribute("style", {"type", value}), do: {"type", value}
   def scrub_attribute("style", {"scoped", value}), do: {"scoped", value}
+
+  # allow data tags
+  def scrub_attribute("meta", {"content", value}) do
+    if value =~ ~r/(javascript|data)/ do
+      nil
+    else
+      {"content", value}
+    end
+  end
+
+  # allow data tags
+  def scrub_attribute("object", {"data", "javascript:" <> _}),
+    do: nil
+
+  def scrub_attribute("object", {"data", data}),
+    do: {"data", data}
 
   # allow data tags
   def scrub_attribute(_tag, {"data-" <> data_tag, value}),
