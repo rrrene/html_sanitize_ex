@@ -38,6 +38,27 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert input == full_html_sanitize(input)
   end
 
+  test "handles bad svg" do
+    input = "<svg><script>alert(1)</script></svg>"
+    expected = "alert(1)"
+
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "handles bad svg with handlers" do
+    input = "<svg/onload=alert(1)></svg>"
+    expected = ""
+
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "handles bad object with handlers" do
+    input = ~s[<object data="javascript:alert(1)"></object>]
+    expected = ""
+
+    assert expected == full_html_sanitize(input)
+  end
+
   test "handles bad css" do
     input =
       "<style> \@import url(javascript:alert('Your cookie:'+document.cookie)); </style>"
@@ -56,12 +77,50 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert expected == full_html_sanitize(input)
   end
 
+  test "handles bad css in style attribute /2" do
+    input = ~s[<div style="width: expression(alert(1));"></div>]
+    expected = "<div></div>"
+
+    assert expected == full_html_sanitize(input)
+  end
+
   test "strips everything except the allowed tags (for multiple tags)" do
     input =
       "<section><header><script>code!</script></header><p>hello <script>code!</script></p></section>"
 
     expected = "<section><header>code!</header><p>hello code!</p></section>"
     assert expected == full_html_sanitize(input)
+  end
+
+  test "strips everything except the allowed tags (for script tags)" do
+    malicious_tag = ~s[<SCRIPT/XSS SRC="http://evil.com/xss.js"></SCRIPT>]
+
+    input =
+      "<section><header>#{malicious_tag}</header><p>hello <script>code!</script></p></section>"
+
+    expected = "<section><header></header><p>hello code!</p></section>"
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "strips everything except the allowed tags (for script tags) /2" do
+    input = ~s[<section><IMG """><SCRIPT>alert("XSS")</SCRIPT>"></section>]
+    expected = "<section><img />alert(\"XSS\")\"&gt;</section>"
+
+    assert expected == full_html_sanitize(input)
+  end
+
+  test "strips everything except the allowed tags (for script tags) /3" do
+    input = ~s[<section><SCR<script>IPT>alert(1)</SCR</script>IPT></section>]
+    expected = "<section>IPT&gt;alert(1)IPT&gt;</section>"
+
+    assert expected == full_html_sanitize(input)
+  end
+
+  @tag href_scrubbing: true
+  test "strips malicious protocol hacks from a href attribute" do
+    {expected, href_hacks} = Fixtures.a_href_hacks()
+
+    Enum.each(href_hacks, fn x -> assert expected == full_html_sanitize(x) end)
   end
 
   test "does not strip caption from tables" do
@@ -137,8 +196,7 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
   end
 
   test "make sure a very long URI is truncated before capturing URI scheme" do
-    input =
-      "<img src='#{File.read!(Path.join(__DIR__, "html5_test_data_uri"))}'>"
+    input = "<img src='#{File.read!(Path.join(__DIR__, "html5_test_data_uri"))}'>"
 
     assert "<img />" == full_html_sanitize(input)
   end
