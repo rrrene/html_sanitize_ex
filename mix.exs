@@ -1,10 +1,12 @@
 defmodule HtmlSanitizeEx.Mixfile do
   use Mix.Project
 
+  @version "1.5.0-dev"
+
   def project do
     [
       app: :html_sanitize_ex,
-      version: "1.5.0-dev",
+      version: @version,
       elixir: "~> 1.0",
       description: "HTML sanitizer for Elixir",
       source_url: "https://github.com/rrrene/html_sanitize_ex",
@@ -25,7 +27,7 @@ defmodule HtmlSanitizeEx.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger, :mochiweb]]
+    [extra_applications: [:logger, :mochiweb]]
   end
 
   # Dependencies can be Hex packages:
