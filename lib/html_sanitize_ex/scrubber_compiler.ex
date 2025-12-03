@@ -44,10 +44,7 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
         valid_schemes = all_valid_schemes[{tag_name, attr_name}]
 
         quote do
-          def scrub_attribute(
-                unquote(tag_name),
-                {unquote(attr_name), "&" <> value}
-              ) do
+          def scrub_attribute(unquote(tag_name), {unquote(attr_name), "&" <> value}) do
             nil
           end
 

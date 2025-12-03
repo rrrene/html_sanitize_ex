@@ -69,10 +69,39 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
       Meta.allow_tag_with_these_attributes "img", ["title", "alt"]
   """
-  defmacro allow_tag_with_these_attributes(tag_name, list \\ []) do
-    list
-    |> Enum.map(&allow_this_tag_with_this_attribute(tag_name, &1))
-    |> Enum.concat([allow_this_tag_and_scrub_its_attributes(tag_name)])
+  defmacro allow_tag_with_these_attributes(tag_name, attr_list \\ [], opts \\ nil) do
+    attribute_clauses =
+      case opts do
+        nil ->
+          []
+
+        [do: [{:->, _, _} | _] = do_block] ->
+          Enum.map(do_block, fn {:->, _, [[param], body]} ->
+            quote do
+              def scrub_attribute(unquote(tag_name), unquote(param)) do
+                unquote(body)
+              end
+            end
+          end)
+
+        _ ->
+          raise "Unexpected call"
+      end
+
+    catch_all_clause =
+      quote do
+        def scrub_attribute(unquote(tag_name), {attr_name, value})
+            when attr_name in unquote(attr_list) do
+          {attr_name, value}
+        end
+      end
+
+    Enum.concat(attribute_clauses, [
+      catch_all_clause,
+      allow_this_tag_and_scrub_its_attributes(tag_name)
+    ])
+
+    # |> tap(&IO.puts(Code.format_string!(Macro.to_string(&1))))
   end
 
   @doc """
@@ -156,7 +185,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
   Ensures any tags/attributes not explicitly whitelisted until this
   statement are stripped.
   """
-  @deprecated ""
+  @deprecated "You can just remove it."
   defmacro strip_everything_not_covered do
     __add__before_compile_for_legacy_support__()
   end
@@ -170,14 +199,6 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       )
 
       @allowed_tag_names unquote(tag_name)
-    end
-  end
-
-  defp allow_this_tag_with_this_attribute(tag_name, attr_name) do
-    quote do
-      def scrub_attribute(unquote(tag_name), {unquote(attr_name), value}) do
-        {unquote(attr_name), value}
-      end
     end
   end
 

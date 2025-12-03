@@ -1042,9 +1042,15 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "translate",
     "name",
     "http-equiv",
-    # "content", # implemented separately below
     "charset"
-  ])
+  ]) do
+    {"content", value} ->
+      if value =~ ~r/(javascript|data)/ do
+        nil
+      else
+        {"content", value}
+      end
+  end
 
   allow_tag_with_these_attributes("meter", [
     "accesskey",
@@ -1124,7 +1130,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "tabindex",
     "title",
     "translate",
-    # "data", # implemented separately below
+    "data",
     "type",
     "typemustmatch",
     "name",
@@ -1132,7 +1138,9 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "form",
     "width",
     "height"
-  ])
+  ]) do
+    {"data", "javascript:" <> _} -> nil
+  end
 
   allow_tag_with_these_attributes("ol", [
     "accesskey",
@@ -2235,22 +2243,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   def scrub_attribute("style", {"media", value}), do: {"media", value}
   def scrub_attribute("style", {"type", value}), do: {"type", value}
   def scrub_attribute("style", {"scoped", value}), do: {"scoped", value}
-
-  # allow data tags
-  def scrub_attribute("meta", {"content", value}) do
-    if value =~ ~r/(javascript|data)/ do
-      nil
-    else
-      {"content", value}
-    end
-  end
-
-  # allow data tags
-  def scrub_attribute("object", {"data", "javascript:" <> _}),
-    do: nil
-
-  def scrub_attribute("object", {"data", data}),
-    do: {"data", data}
 
   # allow data tags
   def scrub_attribute(_tag, {"data-" <> data_tag, value}),
