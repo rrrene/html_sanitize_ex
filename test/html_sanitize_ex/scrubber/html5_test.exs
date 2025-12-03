@@ -73,6 +73,20 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert expected == sanitize(input)
   end
 
+  test "handles bad object with harmless data" do
+    input = ~s[<object data="something harmless"></object>]
+    expected = ~s[<object data="something harmless"></object>]
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad object with harmless attribute" do
+    input = ~s[<object foo="something harmless"></object>]
+    expected = ~s[<object></object>]
+
+    assert expected == sanitize(input)
+  end
+
   test "handles bad embed with data" do
     input = ~s[<embed src="javascript:alert(1)"></embed>]
     expected = ""
@@ -83,6 +97,13 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
   test "handles bad meta with content url" do
     input = ~s[<meta http-equiv="refresh" content="0;url=javascript:alert(1)">]
     expected = "<meta http-equiv=\"refresh\" />"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles good meta with content url" do
+    input = ~s[<meta http-equiv="refresh" content="0;url=https://someurl.com">]
+    expected = ~s[<meta http-equiv="refresh" content="0;url=https://someurl.com" />]
 
     assert expected == sanitize(input)
   end
