@@ -26,13 +26,27 @@ defmodule HtmlSanitizeEx do
   defmacro __using__(opts \\ []) do
     quote do
       @before_compile HtmlSanitizeEx.ScrubberCompiler
+      @behaviour HtmlSanitizeEx.Scrubber
 
       require HtmlSanitizeEx.Scrubber.Meta
       import HtmlSanitizeEx.Scrubber.Meta
 
+      remove_cdata_sections_before_scrub()
+      strip_comments()
+
+      def scrub_attributes(tag, attributes) do
+        attributes
+        |> Enum.map(&scrub_attribute(tag, &1))
+        |> Enum.reject(&is_nil(&1))
+      end
+
+      defoverridable HtmlSanitizeEx.Scrubber
+
       unquote(extend(opts[:extend]))
 
-      def sanitize(html), do: HtmlSanitizeEx.Scrubber.scrub(html, __MODULE__)
+      def sanitize(html) do
+        HtmlSanitizeEx.Scrubber.scrub(html, __MODULE__)
+      end
     end
   end
 

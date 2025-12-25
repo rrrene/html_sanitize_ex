@@ -43,17 +43,6 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   """
 
-  # defmacro allow_tags_and_scrub_their_attributes(list)
-  # defmacro allow_tag_with_these_attributes(tag_name, list \\ [])
-  # defmacro allow_tag_with_any_attributes(tag_name)
-  # defmacro allow_tag_with_this_attribute_values(tag_name, attribute, values)
-  # defmacro allow_tag_with_uri_attributes(tag_name, list, valid_schemes)
-  # defmacro allow_tags_with_style_attributes(list)
-
-  # defmacro remove_cdata_sections_before_scrub
-  # defmacro strip_comments
-  # defmacro strip_everything_not_covered
-
   @doc """
   Allow these tags and use the regular `scrub_attribute/2` function to scrub
   the attributes.
@@ -76,16 +65,28 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
           []
 
         [do: [{:->, _, _} | _] = do_block] ->
-          Enum.map(do_block, fn {:->, _, [[param], body]} ->
-            quote do
-              def scrub_attribute(unquote(tag_name), unquote(param)) do
-                unquote(body)
-              end
+          Enum.map(
+            do_block,
+            fn
+              {:->, _, [[{:when, _, [param, when_body]}], body]} ->
+                quote do
+                  def scrub_attribute(unquote(tag_name), unquote(param))
+                      when unquote(when_body) do
+                    unquote(body)
+                  end
+                end
+
+              {:->, _, [[param], body]} ->
+                quote do
+                  def scrub_attribute(unquote(tag_name), unquote(param)) do
+                    unquote(body)
+                  end
+                end
             end
-          end)
+          )
 
         _ ->
-          raise "Unexpected call"
+          raise "Unexpected expression while calling `allow_tag_with_these_attributes/3`"
       end
 
     catch_all_clause =

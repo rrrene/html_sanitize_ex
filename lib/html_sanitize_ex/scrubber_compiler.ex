@@ -74,7 +74,7 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
           {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes), children}
         end
 
-        defp scrub_attributes(unquote(tag_name), attributes) do
+        def scrub_attributes(unquote(tag_name), attributes) do
           Enum.map(attributes, fn attr ->
             scrub_attribute(unquote(tag_name), attr)
           end)

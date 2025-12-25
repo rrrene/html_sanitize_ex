@@ -3,7 +3,7 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   Allows basic HTML tags to support user input for writing relatively
   plain text but allowing headings, links, bold, and so on.
 
-  Does not allow any mailto-links, styling, HTML5 tags, video embeds etc.
+  Does not allow any styling, HTML5 tags, video embeds etc.
   """
 
   use HtmlSanitizeEx, extend: :strip_tags

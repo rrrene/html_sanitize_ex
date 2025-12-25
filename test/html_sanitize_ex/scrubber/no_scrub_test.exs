@@ -17,6 +17,13 @@ defmodule HtmlSanitizeExScrubberNoScrubTest do
     assert input == no_scrub_sanitize(input)
   end
 
+  test "leaves comments between nodes intact" do
+    input =
+      "This <b>is</b>\n<b>an</b> <i>example</i> of\n<!-- foo -->\n<u>space</u> eating."
+
+    assert input == no_scrub_sanitize(input)
+  end
+
   test "leaves white-space between nodes intact (CR)" do
     input =
       "This <b>is</b>\n<b>an</b> <i>example</i> of\r\n\r\n<u>space</u> eating."

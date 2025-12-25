@@ -2234,7 +2234,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     {"style", scrub_attributes("style", attributes), [scrub_css(text)]}
   end
 
-  defp scrub_attributes("style", attributes) do
+  def scrub_attributes("style", attributes) do
     attributes
     |> Enum.map(&scrub_attribute("style", &1))
     |> Enum.reject(&is_nil(&1))
