@@ -1,5 +1,65 @@
 # Changelog
 
+## 1.5.0
+
+
+### New API for Custom Scrubbers
+
+Instead of importing and requiring `HtmlSanitizeEx.Scrubber.Meta`, just use `HtmlSanitizeEx`:
+
+```elixir
+defmodule MyScrubber do
+  use HtmlSanitizeEx
+
+  allow_tag_with_these_attributes("p", ["title"])
+end
+```
+
+Using `HtmlSanitizeEx` also creates a `sanitize/1` function in the module, so you can just call `MyScrubber.sanitize(html)`.
+
+
+`allow_tag_with_these_attributes/3` is taking a `do` block, which allows specific handling of `attribute`/`value` pairs:
+
+```elixir
+defmodule MyScrubber do
+  use HtmlSanitizeEx
+
+  allow_tag_with_these_attributes("p", ["title"]) do
+    {"class", value} when value in ["red", "green", "blue"] ->
+      {"class", value}
+  end
+end
+```
+
+The handler either returns a `{attribute, value}` pair or `nil` to scrub the value.
+
+
+### Extending existing Scrubbers
+
+`HtmlSanitizeEx` can also be used for extending existing scrubbers:
+
+```elixir
+defmodule MyScrubber do
+  use HtmlSanitizeEx, extend: :basic_html
+
+  allow_tag_with_these_attributes("p", ["title"])
+end
+```
+
+You can extend `:basic_html`, `:html5`, `:markdown_html` and `:strip_tags`.
+
+You can also extend any custom scrubber you created:
+
+```elixir
+defmodule MyOtherScrubber do
+  use HtmlSanitizeEx, extend: MyScrubber
+
+  allow_tag_with_these_attributes("p", ["class"])
+end
+```
+
+The result is a scrubber that works like the built-in BasicHTML scrubber, but also allows `class` and `title` attributes on `<p>` tags.
+
 ## 1.4.4
 
 - Fix compatibility & compiler warnings with Elixir 1.19
