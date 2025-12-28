@@ -69,4 +69,22 @@ defmodule CustomLegacyScrubberTest do
     expected = ~S(code!<p class="allowed">hello code!</p>)
     assert expected == scrub(input, __MODULE__.CustomLegacy2)
   end
+
+  defmodule LinksOnlyScrubber do
+    require HtmlSanitizeEx.Scrubber.Meta
+    alias HtmlSanitizeEx.Scrubber.Meta
+
+    Meta.remove_cdata_sections_before_scrub()
+    Meta.strip_comments()
+
+    Meta.allow_tag_with_uri_attributes("a", ["href"], ["https", "mailto", "http"])
+
+    Meta.strip_everything_not_covered()
+  end
+
+  test "strips everything except the allowed tags from #62" do
+    input = "This is a <a href=\"https://www.youtube.com/\">test</a>"
+
+    assert input == scrub(input, __MODULE__.LinksOnlyScrubber)
+  end
 end
