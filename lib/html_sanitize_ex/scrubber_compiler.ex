@@ -2,12 +2,14 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
   defmacro __before_compile__(env) do
     fallback_module = Module.get_attribute(env.module, :fallback_module)
 
-    allowed_tag_names =
-      Module.get_attribute(env.module, :allowed_tag_names, [])
+    scrub_uri_attribute =
+      env.module
+      |> Module.get_attribute(:scrub_uri_attribute, [])
       |> Enum.uniq()
 
-    scrub_uri_attribute =
-      Module.get_attribute(env.module, :scrub_uri_attribute, [])
+    allowed_tag_names =
+      env.module
+      |> Module.get_attribute(:allowed_tag_names, [])
       |> Enum.uniq()
 
     fallback_or_strip_everything =
@@ -44,20 +46,17 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
         valid_schemes = all_valid_schemes[{tag_name, attr_name}]
 
         quote do
-          def scrub_attribute(unquote(tag_name), {unquote(attr_name), "&" <> value}) do
-            nil
-          end
-
           def scrub_attribute(unquote(tag_name), {unquote(attr_name), uri}) do
-            if URI.valid_schema?(uri, unquote(valid_schemes)) do
-              {unquote(attr_name), uri}
-            end
+            HtmlSanitizeEx.Scrubber.URI.scrub_attribute(
+              unquote(tag_name),
+              {unquote(attr_name), uri},
+              unquote(valid_schemes)
+            )
           end
         end
       end)
 
     quote do
-      alias HtmlSanitizeEx.Scrubber.URI
       unquote(defs)
     end
 

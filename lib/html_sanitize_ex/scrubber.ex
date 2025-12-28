@@ -10,7 +10,7 @@ defmodule HtmlSanitizeEx.Scrubber do
 
   @callback scrub_attributes(tag :: String.t(), attributes :: Keyword.t()) :: Keyword.t()
 
-  @callback scrub_attribute(tag :: String.t(), attribute :: String.t()) :: tuple
+  @callback scrub_attribute(tag :: String.t(), attribute :: String.t()) :: tuple | nil
 
   def scrub(html, scrubber_module)
 
