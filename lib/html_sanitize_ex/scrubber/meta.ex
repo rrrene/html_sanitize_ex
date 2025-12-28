@@ -90,10 +90,14 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
       end
 
     catch_all_clause =
-      quote do
-        def scrub_attribute(unquote(tag_name), {attr_name, value})
-            when attr_name in unquote(attr_list) do
-          {attr_name, value}
+      if attr_list == [] do
+        nil
+      else
+        quote do
+          def scrub_attribute(unquote(tag_name), {attr_name, value})
+              when attr_name in unquote(attr_list) do
+            {attr_name, value}
+          end
         end
       end
 
@@ -193,11 +197,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   defp allow_this_tag_and_scrub_its_attributes(tag_name) do
     quote do
-      Module.register_attribute(
-        __MODULE__,
-        :allowed_tag_names,
-        accumulate: true
-      )
+      Module.register_attribute(__MODULE__, :allowed_tag_names, accumulate: true)
 
       @allowed_tag_names unquote(tag_name)
     end
@@ -213,11 +213,7 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
   defp allow_tag_with_uri_attribute(tag_name, attr_name, valid_schemes) do
     quote do
-      Module.register_attribute(
-        __MODULE__,
-        :scrub_uri_attribute,
-        accumulate: true
-      )
+      Module.register_attribute(__MODULE__, :scrub_uri_attribute, accumulate: true)
 
       @scrub_uri_attribute {{unquote(tag_name), unquote(attr_name)}, unquote(valid_schemes)}
     end

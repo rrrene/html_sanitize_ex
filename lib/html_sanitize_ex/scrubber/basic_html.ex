@@ -6,7 +6,7 @@ defmodule HtmlSanitizeEx.Scrubber.BasicHTML do
   Does not allow any styling, HTML5 tags, video embeds etc.
   """
 
-  use HtmlSanitizeEx, extend: :strip_tags
+  use HtmlSanitizeEx
 
   allow_tag_with_uri_attributes("a", ["href"], ["http", "https", "mailto"])
   allow_tag_with_these_attributes("a", ["name", "title"])
