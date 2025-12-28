@@ -87,4 +87,36 @@ defmodule CustomLegacyScrubberTest do
 
     assert input == scrub(input, __MODULE__.LinksOnlyScrubber)
   end
+
+  defmodule MyScrubber do
+    require HtmlSanitizeEx.Scrubber.Meta
+    alias HtmlSanitizeEx.Scrubber.Meta
+
+    Meta.remove_cdata_sections_before_scrub()
+    Meta.strip_comments()
+
+    Meta.allow_tag_with_these_attributes("img", [])
+
+    def scrub_attribute("img", {"src", "data:" <> _ = uri}) do
+      {"src", uri}
+    end
+
+    Meta.allow_tag_with_uri_attributes(
+      "img",
+      ["src"],
+      ["http", "https", "mailto", "data"]
+    )
+
+    Meta.strip_everything_not_covered()
+  end
+
+  test "strips everything except the allowed tags from #65" do
+    input =
+      ~s|<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" onload="malware()" />|
+
+    expected =
+      ~s|<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />|
+
+    assert expected == scrub(input, __MODULE__.MyScrubber)
+  end
 end
