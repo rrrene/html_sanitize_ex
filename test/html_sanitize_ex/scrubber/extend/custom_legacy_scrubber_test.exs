@@ -95,12 +95,6 @@ defmodule CustomLegacyScrubberTest do
     Meta.remove_cdata_sections_before_scrub()
     Meta.strip_comments()
 
-    Meta.allow_tag_with_these_attributes("img", [])
-
-    def scrub_attribute("img", {"src", "data:" <> _ = uri}) do
-      {"src", uri}
-    end
-
     Meta.allow_tag_with_uri_attributes(
       "img",
       ["src"],
