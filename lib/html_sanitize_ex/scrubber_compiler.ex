@@ -24,12 +24,24 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
 
       unquote(quote_allowed_tag_name_scrubs(allowed_tag_names))
 
+      unquote(quote_default_scrub_attributes_catchall())
+
       unquote(fallback_or_strip_everything)
     end
     # |> tap(fn q ->
     #   IO.puts("### __before_compile__ ###\n")
     #   IO.puts(Code.format_string!(Macro.to_string(q)))
     # end)
+  end
+
+  defp quote_default_scrub_attributes_catchall do
+    quote do
+      def scrub_attributes(tag, attributes) do
+        attributes
+        |> Enum.map(&scrub_attribute(tag, &1))
+        |> Enum.reject(&is_nil(&1))
+      end
+    end
   end
 
   defp quote_allow_tag_with_uri_attribute_scrubs([]) do
@@ -75,13 +87,6 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
       quote do
         def scrub({unquote(tag_name), attributes, children}) do
           {unquote(tag_name), scrub_attributes(unquote(tag_name), attributes), children}
-        end
-
-        def scrub_attributes(unquote(tag_name), attributes) do
-          Enum.map(attributes, fn attr ->
-            scrub_attribute(unquote(tag_name), attr)
-          end)
-          |> Enum.reject(&is_nil(&1))
         end
       end
     end)
