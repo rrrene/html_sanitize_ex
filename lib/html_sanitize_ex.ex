@@ -34,12 +34,6 @@ defmodule HtmlSanitizeEx do
       remove_cdata_sections_before_scrub()
       strip_comments()
 
-      def scrub_attributes(tag, attributes) do
-        attributes
-        |> Enum.map(&scrub_attribute(tag, &1))
-        |> Enum.reject(&is_nil(&1))
-      end
-
       defoverridable HtmlSanitizeEx.Scrubber
 
       unquote(extend(opts[:extend]))
