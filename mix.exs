@@ -8,6 +8,7 @@ defmodule HtmlSanitizeEx.Mixfile do
       app: :html_sanitize_ex,
       version: @version,
       elixir: "~> 1.0",
+      docs: docs(),
       description: "HTML sanitizer for Elixir",
       source_url: "https://github.com/rrrene/html_sanitize_ex",
       package: [
@@ -20,6 +21,13 @@ defmodule HtmlSanitizeEx.Mixfile do
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps()
+    ]
+  end
+
+  defp docs do
+    [
+      main: HtmlSanitizeEx,
+      extras: ["CHANGELOG.md"]
     ]
   end
 

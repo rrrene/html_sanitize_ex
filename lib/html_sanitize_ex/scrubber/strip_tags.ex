@@ -1,6 +1,6 @@
 defmodule HtmlSanitizeEx.Scrubber.StripTags do
   @moduledoc """
-  Strips all tags.
+  Strips all tags (and, naturally, attributes).
   """
 
   use HtmlSanitizeEx

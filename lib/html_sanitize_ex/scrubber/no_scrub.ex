@@ -7,6 +7,9 @@ defmodule HtmlSanitizeEx.Scrubber.NoScrub do
 
   @behaviour HtmlSanitizeEx.Scrubber
 
+  @doc """
+  Scrubs neither tags, nor their attributes.
+  """
   def sanitize(html) do
     HtmlSanitizeEx.Scrubber.scrub(html, __MODULE__)
   end

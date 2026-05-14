@@ -26,6 +26,10 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
 
       unquote(fallback_or_strip_everything)
     end
+    # |> tap(fn q ->
+    #   IO.puts("### __before_compile__ ###\n")
+    #   IO.puts(Code.format_string!(Macro.to_string(q)))
+    # end)
   end
 
   defp quote_allow_tag_with_uri_attribute_scrubs([]) do
