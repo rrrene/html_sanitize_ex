@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1
+
+- Fix compatibility & compiler warnings with Elixir 1.20.0-rc.5
+- Add justify keyword to CSS scrubber
+
 ## 1.5.0
 
 
