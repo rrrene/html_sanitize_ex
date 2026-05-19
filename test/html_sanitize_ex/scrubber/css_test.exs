@@ -8,6 +8,7 @@ defmodule HtmlSanitizeExScrubberCSSTest do
   @good_css [
     ".test { color: red; border: 1px solid brown; }",
     "div.foo { width: 500px; height: 200px; }",
+    "p.justified { text-align: justify; }",
     # gibberish should work
     "GI b gkljfl kj { { { ********"
   ]
