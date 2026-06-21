@@ -29,6 +29,7 @@ defmodule HtmlSanitizeEx.Parser do
 
   defp before_parse(html) do
     html
+    |> String.replace("<?", "&lt;?")
     |> String.replace(~r/(>)(\r?\n)/, "\\1 #{@replacement_linebreak} \\2")
     |> String.replace(~r/(>)(\ +)(<)/, "\\1 #{@replacement_space}\\2\\3")
     |> String.replace(~r/(>)(\t+)(<)/, "\\1 #{@replacement_tab}\\2\\3")

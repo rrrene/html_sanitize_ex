@@ -373,6 +373,10 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
     assert "<span></span>" == basic_html_sanitize("<span class=\"\\")
   end
 
+  test "should_not_crash_on_dangling_processing_instruction" do
+    assert "hello&lt;?" == basic_html_sanitize("hello<?")
+  end
+
   # test "this affects only NS4, but we're on a roll, right?" do
   #  input = "<div size=\"&{alert('XSS')}\">foo</div>"
   #  expected = "<div>foo</div>"
