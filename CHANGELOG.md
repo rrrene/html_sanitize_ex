@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.2
+
+- Prevent crash on `<?` (truncated processing-instruction marker)
+
 ## 1.5.1
 
 - Fix compatibility & compiler warnings with Elixir 1.20.0-rc.5
