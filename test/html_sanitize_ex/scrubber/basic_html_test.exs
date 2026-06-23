@@ -401,4 +401,12 @@ defmodule HtmlSanitizeExScrubberBasicHTMLTest do
 
     assert input == basic_html_sanitize(input)
   end
+
+  test "should sanitize truncated processing-instruction marker" do
+    assert "IkMBuX6PU&lt;?" == basic_html_sanitize("IkMBuX6PU<?")
+  end
+
+  test "should sanitize truncated processing-instruction marker /2" do
+    assert "&lt;?xml" == basic_html_sanitize("<?xml")
+  end
 end
