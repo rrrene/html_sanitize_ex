@@ -190,7 +190,7 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     input =
       "<style> \@import url(javascript:alert('Your cookie:'+document.cookie)); </style>"
 
-    expected = "<style> @import url(:'+document.cookie)); </style>"
+    expected = "<style> </style>"
     assert expected == sanitize(input)
   end
 

