@@ -768,12 +768,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "checked",
     "dirname",
     "disabled",
-    "form",
-    "formaction",
-    "formenctype",
-    "formmethod",
-    "formnovalidate",
-    "formtarget",
     "height",
     "inputmode",
     "list",
@@ -868,7 +862,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "autofocus",
     "challenge",
     "disabled",
-    "form",
     "keytype",
     "name"
   ])
@@ -895,7 +888,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "tabindex",
     "title",
     "translate",
-    "form",
     "for"
   ])
 
@@ -1137,7 +1129,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "typemustmatch",
     "name",
     "usemap",
-    "form",
     "width",
     "height"
   ] do
@@ -1252,7 +1243,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "title",
     "translate",
     "for",
-    "form",
     "name"
   ])
 
@@ -1551,7 +1541,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "translate",
     "autofocus",
     "disabled",
-    "form",
     "multiple",
     "name",
     "required",
@@ -1832,7 +1821,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "cols",
     "dirname",
     "disabled",
-    "form",
     "inputmode",
     "maxlength",
     "name",
