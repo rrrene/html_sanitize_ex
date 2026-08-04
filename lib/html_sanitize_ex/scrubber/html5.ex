@@ -1033,11 +1033,20 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "title",
     "translate",
     "name",
-    "http-equiv",
     "charset"
   ]) do
+    {"http-equiv", "refresh"} ->
+      nil
+
+    {"http-equiv", value} ->
+      if value =~ ~r/^\s*refresh\s*$/i do
+        nil
+      else
+        {"http-equiv", value}
+      end
+
     {"content", value} ->
-      if value =~ ~r/(javascript|data)/ do
+      if value =~ ~r/(javascript|data|url=|script|unsafe)/i do
         nil
       else
         {"content", value}
@@ -1097,8 +1106,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "title",
     "translate"
   ])
-
-  # allow_tag_with_these_attributes "noscript"
 
   allow_tag_with_these_attributes("object", [
     "accesskey",

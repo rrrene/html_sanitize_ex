@@ -144,14 +144,44 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
 
   test "handles bad meta with content url" do
     input = ~s[<meta http-equiv="refresh" content="0;url=javascript:alert(1)">]
-    expected = "<meta http-equiv=\"refresh\" />"
+    expected = "<meta />"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad meta with content url and case-insensitive spelling" do
+    input = ~s[<meta Http-Equiv="refResh" content="0;url=javascript:alert(1)">]
+    expected = "<meta />"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad meta with refresh content javascript" do
+    input = ~s|<meta http-equiv="refresh" content="0;url=JAVASCRIPT:alert(document.domain)">|
+    expected = ~s|<meta />|
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad meta with content url http" do
+    input = ~s|<meta http-equiv="refresh" content="0;url=https://attacker.example/login">|
+    expected = ~s|<meta />|
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad meta with http-equiv=Content-Security-Policy" do
+    input =
+      ~s|<meta http-equiv="Content-Security-Policy" content="script-src 'unsafe-inline' https://attacker.example">|
+
+    expected = ~s|<meta http-equiv=\"Content-Security-Policy\" />|
 
     assert expected == sanitize(input)
   end
 
   test "handles good meta with content url" do
     input = ~s[<meta http-equiv="refresh" content="0;url=https://someurl.com">]
-    expected = ~s[<meta http-equiv="refresh" content="0;url=https://someurl.com" />]
+    expected = ~s[<meta />]
 
     assert expected == sanitize(input)
   end
@@ -160,7 +190,7 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     input =
       ~s[<META HTTP-EQUIV="refresh" CONTENT="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgndGVzdDMnKTwvc2NyaXB0Pg">]
 
-    expected = "<meta http-equiv=\"refresh\" />"
+    expected = "<meta />"
 
     assert expected == sanitize(input)
   end
