@@ -8,7 +8,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
   def scrub(text) do
     text = String.replace(text, ~r/(\/\*|\*\/|<!--|-->)/, " ")
 
-    Regex.replace(~r/([-\w]+)\s*:\s*([^:;]*)/, text, fn _all, a, b ->
+    Regex.replace(~r/([-\w]{1,64})\s*:\s*([^:;]*)/, text, fn _all, a, b ->
       case scrub_css(a, b) do
         {property, value} -> "#{property}: #{value}"
         nil -> ""
