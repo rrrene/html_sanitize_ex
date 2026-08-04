@@ -287,4 +287,21 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     expected = ""
     assert expected == sanitize(input)
   end
+
+  @size 80_000
+
+  test "PCRE exhaustion" do
+    base = "<style>" <> String.duplicate("a", @size)
+    benign = base <> "!</style>"
+    {time_benign, _clean_benign} = :timer.tc(fn -> sanitize(benign) end)
+
+    attack = base <> "!:</style>"
+
+    {time_attack, _clean_attack} = :timer.tc(fn -> sanitize(attack) end)
+
+    ratio = time_attack / max(time_benign, 1)
+
+    assert ratio < 10,
+           "sanitizing the second string should not be an order of magnitude slower (was #{floor(ratio)}x)"
+  end
 end
