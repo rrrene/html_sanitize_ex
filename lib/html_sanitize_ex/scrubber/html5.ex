@@ -1041,10 +1041,25 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "title",
     "translate",
     "name",
-    "http-equiv",
-    "content",
     "charset"
-  ])
+  ]) do
+    {"http-equiv", "refresh"} ->
+      nil
+
+    {"http-equiv", value} ->
+      if value =~ ~r/^\s*refresh\s*$/i do
+        nil
+      else
+        {"http-equiv", value}
+      end
+
+    {"content", value} ->
+      if value =~ ~r/(javascript|data|url=|script|unsafe)/i do
+        nil
+      else
+        {"content", value}
+      end
+  end
 
   Meta.allow_tag_with_these_attributes("meter", [
     "accesskey",
@@ -1100,9 +1115,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "translate"
   ])
 
-  # Meta.allow_tag_with_these_attributes "noscript"
-
-  Meta.allow_tag_with_these_attributes "object", [
+  Meta.allow_tag_with_these_attributes("object", [
     "accesskey",
     "class",
     "contenteditable",
