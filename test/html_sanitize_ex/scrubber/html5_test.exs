@@ -73,6 +73,54 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert expected == sanitize(input)
   end
 
+  test "handles bad object with data (camel case)" do
+    input = ~s[<object data="JavaScript:alert(1)"></object>]
+    expected = "<object></object>"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad object with data (leading space)" do
+    input = ~s[<object data=" javascript:alert(1)"></object>]
+    expected = "<object></object>"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad object with data (leading tab entity)" do
+    input = ~s[<object data="&Tab;javascript:alert(1)"></object>]
+    expected = "<object></object>"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad object with data (text/html)" do
+    input =
+      ~s[<object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>]
+
+    expected = "<object></object>"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad object with data (absolute URL)" do
+    input =
+      ~s[<object data="//attacker.example/x.html"></object>]
+
+    expected = "<object></object>"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad object with data (relative URL)" do
+    input =
+      ~s[<object data="/user-uploads/attacker.html"></object>]
+
+    expected = "<object></object>"
+
+    assert expected == sanitize(input)
+  end
+
   test "handles bad object with harmless data" do
     input = ~s[<object data="something harmless"></object>]
     expected = ~s[<object data="something harmless"></object>]

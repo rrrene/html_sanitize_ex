@@ -1110,7 +1110,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
 
   # Meta.allow_tag_with_these_attributes "noscript"
 
-  Meta.allow_tag_with_these_attributes("object", [
+  Meta.allow_tag_with_these_attributes "object", [
     "accesskey",
     "class",
     "contenteditable",
@@ -1140,7 +1140,14 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "form",
     "width",
     "height"
-  ])
+  ] do
+    {"data", value} ->
+      cond do
+        value =~ ~r/^\//i -> nil
+        value =~ ~r/(javascript|data)/i -> nil
+        true -> {"data", value}
+      end
+  end
 
   Meta.allow_tag_with_these_attributes("ol", [
     "accesskey",
