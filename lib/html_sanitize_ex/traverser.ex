@@ -2,20 +2,14 @@ defmodule HtmlSanitizeEx.Traverser do
   @doc """
     Traverses an html_tree.
   """
-  def traverse([], _scrubber_module) do
-    []
-  end
-
-  def traverse([head | tail], scrubber_module) do
-    head = traverse(head, scrubber_module) |> collapse_list
-    tail = traverse(tail, scrubber_module)
-
-    result = List.flatten([head] ++ tail)
-
-    # IO.inspect {:head, head}
-    # IO.inspect {:tail, tail}
-    # IO.inspect {:result, result}
-    result
+  def traverse(list, scrubber_module) when is_list(list) do
+    Enum.reduce(list, [], fn
+      head, acc ->
+        elem = traverse(head, scrubber_module) |> collapse_list
+        [elem | acc]
+    end)
+    |> Enum.reverse()
+    |> List.flatten()
   end
 
   def traverse({tag, attributes, children}, scrubber_module) do

