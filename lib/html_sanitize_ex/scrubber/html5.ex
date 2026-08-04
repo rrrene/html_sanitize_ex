@@ -1139,7 +1139,12 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "width",
     "height"
   ]) do
-    {"data", "javascript:" <> _} -> nil
+    {"data", value} ->
+      cond do
+        value =~ ~r/^\//i -> nil
+        value =~ ~r/(javascript|data)/i -> nil
+        true -> {"data", value}
+      end
   end
 
   allow_tag_with_these_attributes("ol", [
