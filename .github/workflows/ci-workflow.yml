@@ -22,6 +22,8 @@ jobs:
             otp: 27.3
           - elixir: 1.15.7
             otp: 28.1
+          - elixir: 1.15.7
+            otp: 29.0
           - elixir: 1.16.2
             otp: 27.3
           - elixir: 1.16.2
