@@ -14,7 +14,7 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
         nil -> ""
       end
     end)
-    |> String.replace(~r/\@import\s+[^\);\s]+[\);\s]*/, "")
+    |> String.replace(~r/\@import\s+[^\);\s]+[\);\s]*/i, "")
   end
 
   defp scrub_css("azimuth", val), do: validate({"azimuth", scrub_val(val)})

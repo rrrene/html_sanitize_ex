@@ -84,7 +84,14 @@ defmodule HtmlSanitizeExScrubberCSSTest do
     input = ~s|@import url(//evil.test/exfil.css);|
     assert "" == scrub_css(input)
 
+    input = ~s|@IMPORT url(//evil.test/exfil.css);|
+    assert "" == scrub_css(input)
+
     input = ~s|.comment { @import url(//evil.test/exfil.css) }|
+    expected = ~s|.comment { }|
+    assert expected == scrub_css(input)
+
+    input = ~s|.comment { @IMPORT url(//evil.test/exfil.css) }|
     expected = ~s|.comment { }|
     assert expected == scrub_css(input)
   end
