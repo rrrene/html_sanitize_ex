@@ -80,24 +80,33 @@ defmodule HtmlSanitizeExScrubberCSSTest do
   end
 
   test "should NOT return invalid css / url() for @import" do
-    input = ~s|@import url(//evil.test/exfil.css);|
+    input = ~S|@import url(//evil.test/exfil.css);|
     assert "" == scrub_css(input)
 
-    input = ~s|@IMPORT url(//evil.test/exfil.css);|
+    input = ~S|@IMPORT url(//evil.test/exfil.css);|
     assert "" == scrub_css(input)
 
-    input = ~s|.comment { @import url(//evil.test/exfil.css) }|
-    expected = ~s|.comment { }|
+    input = ~S|@IMPORT "//evil.test/exfil.css";|
+    assert "" == scrub_css(input)
+
+    input = ~S|@import"//evil.test/exfil.css";|
+    assert "" == scrub_css(input)
+
+    input = ~S|@\69 mport url(//evil.test/exfil.css);|
+    assert "" == scrub_css(input)
+
+    input = ~S|.comment { @import url(//evil.test/exfil.css) }|
+    expected = ~S|.comment { }|
     assert expected == scrub_css(input)
 
-    input = ~s|.comment { @IMPORT url(//evil.test/exfil.css) }|
-    expected = ~s|.comment { }|
+    input = ~S|.comment { @IMPORT url(//evil.test/exfil.css) }|
+    expected = ~S|.comment { }|
     assert expected == scrub_css(input)
   end
 
   test "should NOT return invalid css / url() for background" do
-    input = ~s|.comment { background: url(//evil.test/exfil.css) }|
-    expected = ~s|.comment { background:  |
+    input = ~S|.comment { background: url(//evil.test/exfil.css) }|
+    expected = ~S|.comment { background:  |
     assert expected == scrub_css(input)
   end
 

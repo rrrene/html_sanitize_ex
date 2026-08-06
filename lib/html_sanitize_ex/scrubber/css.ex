@@ -6,15 +6,34 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
   def scrub(nil), do: ""
 
   def scrub(text) do
-    text = String.replace(text, ~r/(\/\*|\*\/|<!--|-->)/, " ")
+    text
+    |> decode_escaped_characters()
+    |> remove_comment_markers()
+    |> scrub_property_value_pairs()
+    |> remove_imports()
+  end
 
+  defp decode_escaped_characters(text) do
+    Regex.replace(~r/\\([0-9A-Fa-f]{1,6})(?:\r\n|[\n\r\f\t ])?/, text, fn _, hex ->
+      <<String.to_integer(hex, 16)::utf8>>
+    end)
+  end
+
+  defp remove_comment_markers(text) do
+    String.replace(text, ~r/(\/\*|\*\/|<!--|-->)/, " ")
+  end
+
+  defp remove_imports(text) do
+    String.replace(text, ~r/\@import\s*[^\);\s]+[\);\s]*/i, "")
+  end
+
+  defp scrub_property_value_pairs(text) do
     Regex.replace(~r/([-\w]{1,64})\s*:\s*([^:;]*)/, text, fn _all, a, b ->
       case scrub_css(a, b) do
         {property, value} -> "#{property}: #{value}"
         nil -> ""
       end
     end)
-    |> String.replace(~r/\@import\s+[^\);\s]+[\);\s]*/i, "")
   end
 
   defp scrub_css("azimuth", val), do: validate({"azimuth", scrub_val(val)})

@@ -16,7 +16,10 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   @moduledoc """
   Allows all HTML5 tags to support user input.
 
-  Sanitizes all malicious content.
+  This should be used as a template for your own, more tailored scrubber!
+
+  Sanitizes all objectively malicious content, but for example, this allows all `data-*` attributes,
+  but that might not be a good choice, depending on which frontend frameworks your site uses.
   """
 
   require HtmlSanitizeEx.Scrubber.Meta

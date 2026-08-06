@@ -109,6 +109,10 @@ defmodule HtmlSanitizeEx.Scrubber.Meta do
 
       # Only allow none-SSL images
       Meta.allow_tag_with_uri_attributes "img", ["src"], ["http"]
+
+      # NOTE: this macro should always be called before other `allow_` macros for any given tag
+      allow_tag_with_uri_attributes("a", ["href"], ["http", "https", "mailto"])
+      allow_tag_with_these_attributes("a", ["class", "title"])
   """
   defmacro allow_tag_with_uri_attributes(tag, list, valid_schemes) do
     list
