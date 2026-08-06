@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.4
+
+- Security fixes (CVEs to follow)
+
 ## 1.5.3
 
 - Security fixes (CVEs to follow)
