@@ -174,7 +174,7 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     input =
       ~s|<meta http-equiv="Content-Security-Policy" content="script-src 'unsafe-inline' https://attacker.example">|
 
-    expected = ~s|<meta http-equiv=\"Content-Security-Policy\" />|
+    expected = ~s|<meta />|
 
     assert expected == sanitize(input)
   end
@@ -188,9 +188,34 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
 
   test "handles bad meta with content data" do
     input =
-      ~s[<META HTTP-EQUIV="refresh" CONTENT="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgndGVzdDMnKTwvc2NyaXB0Pg">]
+      ~s[<META HTTP-EQUIV="reFresh" CONTENT="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgndGVzdDMnKTwvc2NyaXB0Pg">]
 
     expected = "<meta />"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad meta for CSP" do
+    input =
+      ~s[<meta http-equiv="Content-Security-Policy" content="default-src 'none'">]
+
+    expected = "<meta />"
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles bad meta for content-type" do
+    input =
+      ~s[<meta http-equiv="content-type" content="text/html; charset=UTF-16">]
+
+    expected = ~S|<meta />|
+
+    assert expected == sanitize(input)
+  end
+
+  test "handles good meta for description" do
+    input = ~s[<meta name="description" content="our data pipeline">]
+    expected = ~s[<meta name="description" content="our data pipeline" />]
 
     assert expected == sanitize(input)
   end

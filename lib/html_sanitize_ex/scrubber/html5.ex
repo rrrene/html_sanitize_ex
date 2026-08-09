@@ -19,7 +19,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   This should be used as a template for your own, more tailored scrubber!
 
   Sanitizes all objectively malicious content, but for example, this allows all `data-*` attributes,
-  but that might not be a good choice, depending on which frontend frameworks your site uses.
+  which might be an unsafe choice, depending on which frontend frameworks your site uses.
   """
 
   use HtmlSanitizeEx, extend: :strip_tags
@@ -1036,25 +1036,10 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "title",
     "translate",
     "name",
-    "charset"
-  ]) do
-    {"http-equiv", "refresh"} ->
-      nil
-
-    {"http-equiv", value} ->
-      if value =~ ~r/^\s*refresh\s*$/i do
-        nil
-      else
-        {"http-equiv", value}
-      end
-
-    {"content", value} ->
-      if value =~ ~r/(javascript|data|url=|script|unsafe)/i do
-        nil
-      else
-        {"content", value}
-      end
-  end
+    "content",
+    "charset",
+    "http-equiv"
+  ])
 
   allow_tag_with_these_attributes("meter", [
     "accesskey",
@@ -2237,10 +2222,37 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     {"style", scrub_attributes("style", attributes), [scrub_css(text)]}
   end
 
+  @doc false
+  def scrub_attributes("meta", attributes) do
+    attributes_as_map = Map.new(attributes)
+
+    attributes
+    |> Enum.map(fn attr -> scrub_attribute("meta", attr, attributes_as_map) end)
+    |> Enum.reject(&is_nil(&1))
+  end
+
   def scrub_attributes("style", attributes) do
     attributes
     |> Enum.map(&scrub_attribute("style", &1))
     |> Enum.reject(&is_nil(&1))
+  end
+
+  @allowed_meta_http_equiv_content ["content-security-policy", "content-type", "refresh"]
+
+  def scrub_attribute("meta", {"content", value}, %{"http-equiv" => http_equiv}) do
+    if not any_of?(http_equiv, @allowed_meta_http_equiv_content) do
+      {"content", value}
+    end
+  end
+
+  def scrub_attribute("meta", {"http-equiv", value}, _attributes_as_map) do
+    if not any_of?(value, @allowed_meta_http_equiv_content) do
+      {"content", value}
+    end
+  end
+
+  def scrub_attribute("meta", {attr, value}, _attributes_as_map) do
+    scrub_attribute("meta", {attr, value})
   end
 
   def scrub_attribute("style", {"media", value}), do: {"media", value}
@@ -2254,6 +2266,10 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   # allow aria tags
   def scrub_attribute(_tag, {"aria-" <> data_tag, value}),
     do: {"aria-" <> data_tag, value}
+
+  defp any_of?(string, list) do
+    Enum.member?(list, String.downcase(String.trim(string)))
+  end
 
   defp scrub_css(text) do
     HtmlSanitizeEx.Scrubber.CSS.scrub(text)
