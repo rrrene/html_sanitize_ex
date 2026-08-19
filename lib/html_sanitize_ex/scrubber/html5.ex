@@ -1045,24 +1045,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "translate",
     "name",
     "charset"
-  ]) do
-    {"http-equiv", "refresh"} ->
-      nil
-
-    {"http-equiv", value} ->
-      if value =~ ~r/^\s*refresh\s*$/i do
-        nil
-      else
-        {"http-equiv", value}
-      end
-
-    {"content", value} ->
-      if value =~ ~r/(javascript|data|url=|script|unsafe)/i do
-        nil
-      else
-        {"content", value}
-      end
-  end
+  ])
 
   Meta.allow_tag_with_these_attributes("meter", [
     "accesskey",
@@ -1140,21 +1123,13 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "tabindex",
     "title",
     "translate",
-    "data",
     "type",
     "typemustmatch",
     "name",
     "usemap",
     "width",
     "height"
-  ] do
-    {"data", value} ->
-      cond do
-        value =~ ~r/^\//i -> nil
-        value =~ ~r/(javascript|data)/i -> nil
-        true -> {"data", value}
-      end
-  end
+  ])
 
   Meta.allow_tag_with_these_attributes("ol", [
     "accesskey",
@@ -2257,6 +2232,34 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
   # allow data tags
   def scrub_attribute(_tag, {"data-" <> data_tag, value}),
     do: {"data-" <> data_tag, value}
+
+  def scrub_attribute("meta", {"http-equiv", "refresh"}) do
+    nil
+  end
+
+  def scrub_attribute("meta", {"http-equiv", value}) do
+    if value =~ ~r/^\s*refresh\s*$/i do
+      nil
+    else
+      {"http-equiv", value}
+    end
+  end
+
+  def scrub_attribute("meta", {"content", value}) do
+    if value =~ ~r/(javascript|data|url=|script|unsafe)/i do
+      nil
+    else
+      {"content", value}
+    end
+  end
+
+  def scrub_attribute("object", {"data", value}) do
+    cond do
+      value =~ ~r/^\//i -> nil
+      value =~ ~r/(javascript|data)/i -> nil
+      true -> {"data", value}
+    end
+  end
 
   # allow aria tags
   def scrub_attribute(_tag, {"aria-" <> data_tag, value}),
