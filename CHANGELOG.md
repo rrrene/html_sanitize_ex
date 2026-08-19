@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.5
+
+- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+
 ## 1.4.4
 
 - Fix compatibility & compiler warnings with Elixir 1.19
