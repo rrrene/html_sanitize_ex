@@ -3,15 +3,15 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
   Scrub CSS.
   """
 
-  def scrub(nil), do: ""
-
-  def scrub(text) do
+  def scrub(text) when is_binary(text) do
     text
     |> decode_escaped_characters()
     |> remove_comment_markers()
     |> scrub_property_value_pairs()
     |> remove_imports()
   end
+
+  def scrub(_nil_or_nested_tags), do: ""
 
   defp decode_escaped_characters(text) do
     Regex.replace(~r/\\([0-9A-Fa-f]{1,6})(?:\r\n|[\n\r\f\t ])?/, text, fn _, hex ->
