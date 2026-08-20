@@ -81,6 +81,14 @@ end
 
 The result is a scrubber that works like the built-in BasicHTML scrubber, but also allows `class` and `title` attributes on `<p>` tags.
 
+## 1.4.6
+
+- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+
+## 1.4.5
+
+- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+
 ## 1.4.4
 
 - Fix compatibility & compiler warnings with Elixir 1.19
