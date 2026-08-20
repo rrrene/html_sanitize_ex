@@ -414,4 +414,19 @@ defmodule HtmlSanitizeExScrubberHTML5Test do
     refute String.contains?(sanitize(attack), "@import url(#{attacker_url});")
     refute String.contains?(sanitize(control), "evil.test")
   end
+
+  test "does not crash on <style> with a single tag child" do
+    assert "<style></style>" == sanitize("<style><b></b></style>")
+    assert "<style></style>" == sanitize("<style><p>x</p></style>")
+    assert "<style></style>" == sanitize("<style><br></style>")
+    assert "<style></style>" == sanitize("<style><img/></style>")
+    assert ~s|<style type="text/css"></style>| == sanitize("<style type=text/css><i></i></style>")
+  end
+
+  test "does not crash on realistic mixed HTML with <style>" do
+    input = ~s|<article><h1>T</h1><style><span>x</span></style><p>B</p></article>|
+    expected = ~s|<article><h1>T</h1><style></style><p>B</p></article>|
+
+    assert expected == sanitize(input)
+  end
 end
