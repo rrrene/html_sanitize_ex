@@ -1117,7 +1117,6 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
     "tabindex",
     "title",
     "translate",
-    "data",
     "type",
     "typemustmatch",
     "name",
