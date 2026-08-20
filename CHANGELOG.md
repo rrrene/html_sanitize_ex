@@ -1,12 +1,16 @@
 # Changelog
 
+## 1.5.5
+
+- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+
 ## 1.5.4
 
-- Security fixes (CVEs to follow)
+- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
 
 ## 1.5.3
 
-- Security fixes (CVEs to follow)
+- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
 
 ## 1.5.2
 
