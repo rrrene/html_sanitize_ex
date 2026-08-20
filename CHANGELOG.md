@@ -2,15 +2,31 @@
 
 ## 1.5.5
 
-- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+Security fixes
+
+- CVE to be published
+
+see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
 ## 1.5.4
 
-- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+Security fixes
+
+- CVE-2026-68747
+
+see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
 ## 1.5.3
 
-- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+Security fixes
+
+- CVE-2026-68750
+- CVE-2026-68749
+- CVE-2026-66829
+- CVE-2026-66370
+- CVE-2026-66843
+
+see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
 ## 1.5.2
 
@@ -83,11 +99,24 @@ The result is a scrubber that works like the built-in BasicHTML scrubber, but al
 
 ## 1.4.6
 
-- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+Security fixes
+
+- CVE to be published
+
+see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
 ## 1.4.5
 
-- Security fixes (see https://hex.pm/packages/html_sanitize_ex/advisories)
+Security fixes
+
+- CVE-2026-68750
+- CVE-2026-68749
+- CVE-2026-68747
+- CVE-2026-66829
+- CVE-2026-66370
+- CVE-2026-66843
+
+see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
 ## 1.4.4
 
