@@ -127,7 +127,7 @@ defmodule HtmlSanitizeEx.ScrubberCompiler do
       def scrub(unquote(" " <> replacement_space <> " ") <> text),
         do: " " <> text
 
-      def scrub(unquote(" " <> replacement_tab <> " ") <> text), do: text
+      def scrub(unquote(" " <> replacement_tab) <> text), do: text
 
       # Text is left alone
       def scrub("" <> text), do: text
