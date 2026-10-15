@@ -15,9 +15,14 @@ defmodule HtmlSanitizeEx.Scrubber.CSS do
 
   defp decode_escaped_characters(text) do
     Regex.replace(~r/\\([0-9A-Fa-f]{1,6})(?:\r\n|[\n\r\f\t ])?/, text, fn _, hex ->
-      <<String.to_integer(hex, 16)::utf8>>
+      hex |> String.to_integer(16) |> escaped_code_point()
     end)
   end
+
+  # Surrogates and code points past U+10FFFF can't be encoded as UTF-8;
+  # CSS Syntax decodes them as U+FFFD.
+  defp escaped_code_point(code) when code in 0xD800..0xDFFF or code > 0x10FFFF, do: "\uFFFD"
+  defp escaped_code_point(code), do: <<code::utf8>>
 
   defp remove_comment_markers(text) do
     String.replace(text, ~r/(\/\*|\*\/|<!--|-->)/, " ")
