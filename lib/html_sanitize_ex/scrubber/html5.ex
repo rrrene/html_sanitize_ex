@@ -1128,6 +1128,7 @@ defmodule HtmlSanitizeEx.Scrubber.HTML5 do
       cond do
         value =~ ~r/^\//i -> nil
         value =~ ~r/(javascript|data)/i -> nil
+        value =~ ~r/^https?:/i -> nil
         true -> {"data", value}
       end
   end
