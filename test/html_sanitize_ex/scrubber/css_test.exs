@@ -136,4 +136,11 @@ defmodule HtmlSanitizeExScrubberCSSTest do
       assert text != scrub_css(text)
     end)
   end
+
+  test "should not crash on escapes that are not valid code points" do
+    # past U+10FFFF: an unterminated \\2019 followed by "CA"
+    assert scrub_css("color: red; font-family: \\2019CA") == "color: red; "
+    # surrogate
+    assert scrub_css("color: red; font-family: \\D800") == "color: red; "
+  end
 end
