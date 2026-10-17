@@ -88,6 +88,13 @@ defmodule HtmlSanitizeExScrubberStripTagsTest do
              strip_tags("some text\r\n<b>break only from one side</b>")
   end
 
+  # TODO: improve whitespace preservation
+  @tag :skip
+  test "should not destroy white-space /6" do
+    assert "sometext with tab between tags \t will keep tab" ==
+             strip_tags("some<b>text with tab between tags</b> \t <i>will keep tab</i>")
+  end
+
   describe "<a>" do
     # link sanitizer
 
