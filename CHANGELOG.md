@@ -1,10 +1,19 @@
 # Changelog
 
+## 1.5.6
+
+Security fixes
+
+- Handling invalid CSS escapes
+- CVE to be published (handling of malicious data attribute in <meta> tags)
+
+see https://hex.pm/packages/html_sanitize_ex/advisories for more info
+
 ## 1.5.5
 
 Security fixes
 
-- CVE to be published
+- CVE to be published (handling of malicious <meta> tags)
 
 see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
@@ -12,7 +21,7 @@ see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
 Security fixes
 
-- CVE-2026-68747
+- CVE-2026-68747 (handling of malicious @import in CSS)
 
 see https://hex.pm/packages/html_sanitize_ex/advisories for more info
 
